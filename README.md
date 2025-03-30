@@ -1,1 +1,4 @@
 # Mentorados
+Este repositório apresenta a modelagem do usuário Mentorado no sistema do projeto da matéria de Engenharia da Software dos alunos de Engenharia da Computação da Escola de Engenharia Mackenzie. O projeto visa auxiliar os estudantes quanto ao desenvolvimento de uma plataforma funcional utilizando um método de Microsserviços. O programa propõe organizar os sistemas de mentorias implementado em diversas universidades e empresas brasileiras. Ao proporcionar essas oportunidades de compartilhamento de experiências, esse aplicativo busca guiar indivíduos e fomentar o desenvolvimento pessoal no mundo atual.
+
+O presente documento detalha a arquitetura, engenharia e desenvolvimento do usuário Mentorado através de técnicas, protótipos de tela, e etapas necessárias para sua implementação, além de especificar requisitos técnicos e operacionais essenciais para seu funcionamento.
