@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tela de Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white flex justify-center items-center h-screen">
+  <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+    
+    <button class="w-full flex items-center justify-center bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 mb-4">
+      <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M22.446 10.273H12.234v3.812h5.786c-.241 1.248-1.017 2.308-2.19 2.976l3.534 2.759c2.071-1.916 3.272-4.737 3.272-7.931 0-.613-.058-1.208-.19-1.782zm-10.212 6.93c-3.02 0-5.541-2.528-5.541-5.616s2.521-5.617 5.541-5.617c1.522 0 2.889.591 3.877 1.544l2.734-2.684c-1.732-1.609-3.976-2.573-6.611-2.573-5.478 0-9.918 4.468-9.918 10 0 5.533 4.44 10 9.918 10 4.901 0 9.073-3.407 9.867-7.939h-4.866c-.886 1.978-2.783 3.355-5.001 3.355zm0-14.203c-.939 0-1.698.762-1.698 1.698s.759 1.699 1.698 1.699 1.698-.762 1.698-1.699-.759-1.698-1.698-1.698z"></path>
+      </svg>
+      Continuar com Google
+    </button>
+    
+    <div class="relative my-6">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-gray-300"></div>
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="px-2 bg-white text-gray-500">Ou use seu e-mail</span>
+      </div>
+    </div>
+    
+    <form action="#" method="POST">
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700">E-mail</label>
+        <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="block text-gray-700">Senha</label>
+        <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" required>
+      </div>
+      
+      <button type="submit" class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">Login</button>
+    </form>
+
+    <p class="text-sm text-gray-500 mt-4 text-center">
+      Esqueceu a senha? <a href="#" class="text-blue-500 hover:underline">Recuperar</a>
+    </p>
+  </div>
+</body>
+</html>
