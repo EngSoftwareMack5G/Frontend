@@ -3,43 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feedbacks - MackLink</title>
+  <title>Feedback - MackLink</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function setRating(rating) {
+      const stars = document.querySelectorAll('.star');
+      document.getElementById('rating-value').value = rating;
+      stars.forEach((star, index) => {
+        star.textContent = index < rating ? '★' : '☆';
+      });
+    }
+  </script>
 </head>
-<body class="bg-gray-100 text-gray-900">
-  <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
-    <a href="home.html" class="text-xl font-semibold">MackLink</a>
-    <span class="text-sm text-gray-600">Feedbacks e Avaliações</span>
-    <a href="login_option.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
-  </header>
-
-  <main class="px-6 py-10 max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-6">O que dizem sobre as mentorias</h1>
-
-    <div class="space-y-6">
-      <!-- Exemplo de feedback -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <p class="text-gray-800 italic">"A mentoria de liderança me ajudou a melhorar minha comunicação com a equipe."</p>
-        <p class="text-sm text-gray-500 mt-2">— Ana M., participante</p>
-      </div>
-
-      <div class="bg-white p-6 rounded-xl shadow">
-        <p class="text-gray-800 italic">"Foi essencial para eu entender como investir melhor meu dinheiro."</p>
-        <p class="text-sm text-gray-500 mt-2">— Carlos S., participante</p>
-      </div>
-
-      <!-- Você pode adicionar um formulário simples no final -->
-      <form class="bg-white p-6 rounded-xl shadow space-y-4 mt-10">
-        <h2 class="text-lg font-semibold">Deixe seu feedback</h2>
-        <input type="text" placeholder="Seu nome" class="w-full border rounded px-3 py-2 text-sm">
-        <textarea placeholder="Seu comentário..." class="w-full border rounded px-3 py-2 text-sm" rows="4"></textarea>
-        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Enviar</button>
-      </form>
+<body class="bg-gray-100 text-gray-900 px-6 py-10 max-w-xl mx-auto">
+  <h1 class="text-3xl font-bold mb-4">Deixe seu Feedback</h1>
+  <form class="bg-white p-6 rounded-xl shadow-md">
+    <label class="block text-lg font-semibold mb-2">Avaliação:</label>
+    <div class="flex text-3xl gap-2 mb-4 cursor-pointer">
+      <span class="star" onclick="setRating(1)">☆</span>
+      <span class="star" onclick="setRating(2)">☆</span>
+      <span class="star" onclick="setRating(3)">☆</span>
+      <span class="star" onclick="setRating(4)">☆</span>
+      <span class="star" onclick="setRating(5)">☆</span>
     </div>
-  </main>
+    <input type="hidden" id="rating-value" name="rating" value="0" />
 
-  <footer class="bg-gray-200 text-center text-sm text-gray-500 py-8 mt-10">
-    <p>&copy; MackLink 2025</p>
-  </footer>
+    <label class="block text-lg font-semibold mb-2">Comentário:</label>
+    <textarea class="w-full border rounded p-3 mb-4" rows="4" placeholder="Escreva seu comentário..."></textarea>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Enviar Feedback</button>
+  </form>
 </body>
 </html>
