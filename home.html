@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MackLink</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recentes - MackLink</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
@@ -13,8 +13,9 @@
     <a href="subscription.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
   </header>
 
+
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
-    <a href="recents.html">RECENTES</a>
+    <a href="recents.html" class="font-bold text-black">RECENTES</a>
     <a href="finance.html">FINANCEIRO</a>
     <a href="carrers.html">CARREIRA</a>
     <a href="business.html">NEGÓCIOS</a>
@@ -22,31 +23,53 @@
     <a href="my_mentorships.html">MINHAS MENTORIAS</a>
   </nav>
 
-  <main class="px-6 py-10 max-w-7xl mx-auto">
-    <h2 class="text-2xl font-bold mb-6">Destaques da plataforma</h2>
-    <div class="flex flex-wrap gap-6 justify-between">
-      <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-[32%]">
-        <div class="text-xs uppercase text-gray-500 mb-2">CARREIRA</div>
-        <h3 class="font-semibold text-lg mb-1">Saúde Mental no trabalho</h3>
-        <p class="text-sm text-gray-700 mb-3">Dicas de bem-estar e equilíbrio emocional no ambiente corporativo.</p>
-        <p class="text-xs text-gray-400">TOM JERRY - 13/06/2023</p>
+  <!-- Main Content -->
+  <main class="flex-grow px-6 py-10 max-w-5xl mx-auto">
+    <!-- Introdução -->
+    <section class="mb-12">
+      <h1 class="text-3xl font-bold mb-4">Bem-vindo ao MackLink</h1>
+      <p class="text-lg leading-relaxed">
+        O <strong>MackLink</strong> é uma plataforma de mentorias desenvolvida para conectar pessoas experientes a quem busca orientação profissional e pessoal. 
+        Aqui, você encontra mentorias sobre os mais diversos temas, incluindo <strong>carreiras, negócios, finanças, liderança</strong> e muito mais.
+      </p>
+      <p class="text-lg mt-4">
+        Ideal para quem deseja aprender com quem já trilhou o caminho, o MackLink permite que você se inscreva em múltiplas mentorias, explorando diferentes áreas de interesse.
+      </p>
+      <p class="text-sm text-gray-600 mt-6 italic">
+        Este projeto foi desenvolvido por alunos de Engenharia da Computação da Universidade Presbiteriana Mackenzie para a disciplina de Engenharia de Software.
+      </p>
+    </section>
+
+    <!-- Mentorias Populares -->
+    <section>
+      <h2 class="text-2xl font-semibold mb-6">Mentorias Populares</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <!-- Mentoria 1 -->
+        <div class="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
+          <h3 class="text-xl font-bold mb-2">Liderança Estratégica</h3>
+          <p class="text-sm text-gray-700 mb-2">Aprenda a liderar equipes com foco, empatia e resultado.</p>
+          <span class="text-xs text-gray-500">+120 inscritos</span>
+        </div>
+
+        <!-- Mentoria 2 -->
+        <div class="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
+          <h3 class="text-xl font-bold mb-2">Educação Financeira</h3>
+          <p class="text-sm text-gray-700 mb-2">Entenda como organizar suas finanças e investir com segurança.</p>
+          <span class="text-xs text-gray-500">+98 inscritos</span>
+        </div>
+
+        <!-- Mentoria 3 -->
+        <div class="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
+          <h3 class="text-xl font-bold mb-2">Transição de Carreira</h3>
+          <p class="text-sm text-gray-700 mb-2">Encontre novos caminhos e se reinvente no mercado de trabalho.</p>
+          <span class="text-xs text-gray-500">+105 inscritos</span>
+        </div>
       </div>
-      <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-[32%]">
-        <div class="text-xs uppercase text-gray-500 mb-2">FINANCEIRO</div>
-        <h3 class="font-semibold text-lg mb-1">Como lidar com o dinheiro</h3>
-        <p class="text-sm text-gray-700 mb-3">Mentoria sobre organização financeira e planejamento.</p>
-        <p class="text-xs text-gray-400">TOM JERRY - 13/06/2023</p>
-      </div>
-      <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-[32%]">
-        <div class="text-xs uppercase text-gray-500 mb-2">LIDERANÇA</div>
-        <h3 class="font-semibold text-lg mb-1">Como ser um bom líder</h3>
-        <p class="text-sm text-gray-700 mb-3">Dicas práticas e experiências de liderança eficaz.</p>
-        <p class="text-xs text-gray-400">TOM JERRY - 13/06/2023</p>
-      </div>
-    </div>
+    </section>
   </main>
 
-  <footer class="bg-white text-center text-sm text-gray-500 py-8">
+  <!-- Footer -->
+  <footer class="bg-gray-200 text-center text-sm text-gray-500 py-8">
     <div class="mb-2 text-lg font-bold">Logo</div>
     <div class="flex justify-center gap-4 text-xl mb-2">
       <span>🐦</span>
@@ -61,5 +84,6 @@
       <a href="#" class="hover:underline">Cookie Policy</a>
     </div>
   </footer>
+
 </body>
 </html>
