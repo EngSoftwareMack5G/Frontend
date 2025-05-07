@@ -15,18 +15,53 @@
 
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
     <a href="about.html">SOBRE O PROJETO</a>
-    <a href="recents.html">RECENTES</a>
-    <a href="finance.html">FINANCEIRO</a>
-    <a href="carrers.html">CARREIRA</a>
-    <a href="business.html">NEGÓCIOS</a>
-    <a href="leadership.html">LIDERANÇA</a>
     <a href="my_mentorships.html"class="font-bold text-black">MINHAS MENTORIAS</a>
     <a href="feedbacks.html">FEEDBACKS</a>
   </nav>
 
   <!-- Conteúdo principal -->
   <main class="flex-grow px-6 py-10 max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold mb-8">Minhas Mentorias</h1>
+    <div class="flex flex-col items-center justify-center min-h-screen p-6">
+      <div class="w-full max-w-2xl flex flex-col items-center">
+          <h1 class="text-3xl font-bold mb-6 text-center">Mentorias Disponíveis</h1>
+
+          <!-- Lista de Mentorías -->
+          <div id="mentoriasContainer" class="w-full flex flex-col items-center mb-6"></div>
+
+          <a href="criarmentoria.html" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">Adicionar Mentoria</a>
+      </div>
+  </div>
+
+  <script>
+      const mentoriasContainer = document.getElementById('mentoriasContainer');
+
+      let mentorias = JSON.parse(localStorage.getItem('mentorias')) || [];
+
+      function renderMentorias() {
+          mentoriasContainer.innerHTML = '';
+          if (mentorias.length === 0) {
+              mentoriasContainer.innerHTML = '<p class="text-center text-gray-500">Nenhuma mentoria cadastrada ainda.</p>';
+          } else {
+              mentorias.forEach((mentoria, index) => {
+                  const mentoriaDiv = document.createElement('div');
+                  mentoriaDiv.className = 'bg-white p-4 rounded shadow mb-4 w-full flex flex-col items-center';
+
+                  mentoriaDiv.innerHTML = `
+                      <h2 class="text-xl font-bold mb-2 text-center">${mentoria.titulo}</h2>
+                      <p class="mb-2 text-center">${mentoria.descricao}</p>
+                      <p class="text-sm text-gray-700 mb-1">Autor: <span class="font-semibold">${mentoria.autor}</span></p>
+                      <p class="text-sm text-gray-700 mb-1">Data: <span class="font-semibold">${mentoria.data}</span></p>
+                      <p class="text-sm text-gray-700 mb-1">Tópico: <span class="font-semibold">${mentoria.topico}</span></p>
+                      <p class="text-sm text-gray-600 mb-2">Inscritos: ${mentoria.inscritos}</p>
+                      <a href="criarmentoria.html?edit=${index}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 mt-2">Editar</a>
+                  `;
+                  mentoriasContainer.appendChild(mentoriaDiv);
+              });
+          }
+      }
+
+      renderMentorias();
+  </script>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -86,19 +121,5 @@
     </div>
   </footer>
 
-  <script>
-    // Verifica se o usuário está logado
-    document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token'); // Obtém o token do localStorage
-      const loginButton = document.querySelector('a[href="login_option.html"]');
-  
-      if (token) {
-        // Substitui o botão de login por um botão de perfil
-        loginButton.textContent = 'Perfil';
-        loginButton.href = 'profile.html'; // Redireciona para a página de perfil
-      }
-    });
-  </script>
-  
 </body>
 </html>

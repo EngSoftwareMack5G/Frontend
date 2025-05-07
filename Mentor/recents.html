@@ -82,20 +82,5 @@
       <a href="#" class="hover:underline">Cookie Policy</a>
     </div>
   </footer>
-
-  <script>
-    // Verifica se o usuário está logado
-    document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token'); // Obtém o token do localStorage
-      const loginButton = document.querySelector('a[href="login_option.html"]');
-  
-      if (token) {
-        // Substitui o botão de login por um botão de perfil
-        loginButton.textContent = 'Perfil';
-        loginButton.href = 'profile.html'; // Redireciona para a página de perfil
-      }
-    });
-  </script>
-  
 </body>
 </html>
