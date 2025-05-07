@@ -19,132 +19,55 @@
     </nav>
     <div class="flex flex-col items-center justify-center min-h-screen p-6">
         <div class="w-full max-w-lg bg-white p-6 rounded shadow">
-            <h1 class="text-2xl font-bold mb-4 text-center">Adicionar Mentoria</h1>
-            <form id="mentoriaForm" class="space-y-2">
-                <input id="titulo" placeholder="Título" class="w-full border p-2 rounded" required>
-                <textarea id="descricao" placeholder="Descrição" class="w-full border p-2 rounded" required></textarea>
-                <select id="autor" class="w-full border p-2 rounded" required>
-                    <option value="">Carregando autores...</option>
-                </select>
-                <input id="data" type="date" class="w-full border p-2 rounded" required>
-                <select id="topico" class="w-full border p-2 rounded" required>
+            <h1 class="text-2xl font-bold mb-4">Criar Nova Mentoria</h1>
+            <form id="mentoriaForm" class="space-y-4">
+                <input type="text" id="titulo" placeholder="Título" class="w-full p-2 border rounded" required>
+                <textarea id="descricao" placeholder="Descrição" class="w-full p-2 border rounded" required></textarea>
+                <input type="date" id="data" class="w-full p-2 border rounded" required>
+                <select id="topico" class="w-full p-2 border rounded" required>
+                    <option value="">Selecione o tópico</option>
                     <option value="Carreiras">Carreiras</option>
                     <option value="Lideranças">Lideranças</option>
                     <option value="Financeiro">Financeiro</option>
                     <option value="Negócios">Negócios</option>
                 </select>
-                <button class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" type="submit">
-                    Adicionar Mentoria
-                </button>
+                <input type="text" id="autor" class="w-full p-2 border rounded bg-gray-100" readonly>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar Mentoria</button>
+                <a href="my_mentorships.html" class="inline-block ml-4 text-blue-500 hover:underline">Voltar</a>
             </form>
-    
-            <h2 class="text-xl font-bold mt-6 mb-4 text-center">Mentorias</h2>
-            <div id="mentoriasContainer" class="space-y-4"></div>
         </div>
     
         <script>
-            const form = document.getElementById('mentoriaForm');
-            const container = document.getElementById('mentoriasContainer');
-            const titulo = document.getElementById('titulo');
-            const descricao = document.getElementById('descricao');
-            const autor = document.getElementById('autor');
-            const data = document.getElementById('data');
-            const topico = document.getElementById('topico');
-    
-            // Carregar perfis
-            function loadPerfis() {
-                fetch('http://localhost:3000/perfis')
-                    .then(res => res.json())
-                    .then(data => {
-                        autor.innerHTML = '<option value="">Selecione o autor</option>';
-                        data.forEach(perfil => {
-                            const opt = document.createElement('option');
-                            opt.value = perfil.nome;
-                            opt.textContent = perfil.nome;
-                            autor.appendChild(opt);
-                        });
-                    });
-            }
-    
-            // Carregar mentorias
-            function loadMentorias() {
-                fetch('http://localhost:3000/mentorias')
-                    .then(res => res.json())
-                    .then(data => {
-                        container.innerHTML = '';
-                        data.forEach(m => {
-                            const div = document.createElement('div');
-                            div.className = 'p-4 border rounded bg-gray-50';
-                            div.innerHTML = `
-                                <h2 class="font-bold text-lg">${m.titulo}</h2>
-                                <p>${m.descricao}</p>
-                                <p><span class="font-semibold">Autor:</span> ${m.autor}</p>
-                                <p><span class="font-semibold">Data:</span> ${m.data}</p>
-                                <p><span class="font-semibold">Tópico:</span> ${m.topico}</p>
-                                <div class="flex space-x-2 mt-2">
-                                    <button onclick="editMentoria(${m.id})" class="bg-yellow-500 text-white px-2 rounded hover:bg-yellow-600">Editar</button>
-                                    <button onclick="confirmDelete(${m.id})" class="bg-red-500 text-white px-2 rounded hover:bg-red-600">Excluir</button>
-                                </div>
-                            `;
-                            container.appendChild(div);
-                        });
-                    });
-            }
-    
-            // Adicionar mentoria
-            form.addEventListener('submit', e => {
-                e.preventDefault();
-                const mentoria = {
-                    titulo: titulo.value.trim(),
-                    descricao: descricao.value.trim(),
-                    autor: autor.value,
-                    data: data.value,
-                    topico: topico.value
-                };
-                fetch('http://localhost:3000/mentorias', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(mentoria)
-                }).then(() => {
-                    form.reset();
-                    loadMentorias();
+            // Carrega o primeiro perfil como autor padrão
+            fetch('http://localhost:3000/perfis')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        document.getElementById('autor').value = data[0].nome;
+                    }
                 });
-            });
     
-            // Editar mentoria
-            function editMentoria(id) {
-                const novoTitulo = prompt('Novo título:');
-                const novaDescricao = prompt('Nova descrição:');
-                const novaData = prompt('Nova data (yyyy-mm-dd):');
-                const novoTopico = prompt('Novo tópico (Carreiras, Lideranças, Financeiro, Negócios):');
-                if (novoTitulo && novaDescricao && novaData && novoTopico) {
-                    fetch(`http://localhost:3000/mentorias/${id}`, {
-                        method: 'PUT',
+            document.getElementById('mentoriaForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+    
+                const titulo = document.getElementById('titulo').value.trim();
+                const descricao = document.getElementById('descricao').value.trim();
+                const data = document.getElementById('data').value;
+                const topico = document.getElementById('topico').value;
+                const autor = document.getElementById('autor').value;
+    
+                if (titulo && descricao && data && topico && autor) {
+                    fetch('http://localhost:3000/mentorias', {
+                        method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            titulo: novoTitulo,
-                            descricao: novaDescricao,
-                            data: novaData,
-                            topico: novoTopico
-                        })
-                    }).then(() => loadMentorias());
+                        body: JSON.stringify({ titulo, descricao, autor, data, topico })
+                    }).then(() => {
+                        window.location.href = 'my_mentorships.html';
+                    });
+                } else {
+                    alert('Preencha todos os campos.');
                 }
-            }
-    
-            // Confirmar e excluir mentoria
-            function confirmDelete(id) {
-                if (confirm('Confirme a deleção da mentoria.')) {
-                    fetch(`http://localhost:3000/mentorias/${id}`, {
-                        method: 'DELETE'
-                    }).then(() => loadMentorias());
-                }
-            }
-    
-            // Inicialização
-            window.onload = function() {
-                loadPerfis();
-                loadMentorias();
-            };
+            });
         </script>
 </body>
 </html>

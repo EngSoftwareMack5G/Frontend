@@ -14,159 +14,60 @@
     <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
       <a href="../about.html">SOBRE O PROJETO</a>
       <a href="../recents.html" class="font-bold text-black">RECENTES</a>
-      <a href="../my_mentorships.html">MINHAS MENTORIAS</a>
+      <a href="my_mentorships.html">MINHAS MENTORIAS</a>
       <a href="../feedbacks.html">FEEDBACKS</a>
     </nav>
     <div class="flex flex-col items-center justify-center min-h-screen p-6">
-        <div class="flex flex-col items-center justify-center min-h-screen p-6">
-            <div class="w-full max-w-2xl flex flex-col items-center">
-                <h1 class="text-3xl font-bold mb-6 text-center">Gerenciar Mentorias</h1>
-    
-                <!-- Formulário para criar nova mentoria -->
-                <form id="mentoriaForm" class="bg-white p-6 rounded shadow w-full flex flex-col items-center">
-                    <input id="titulo" type="text" placeholder="Título" class="border p-2 w-full mb-3 rounded" required>
-                    <textarea id="descricao" placeholder="Descrição" class="border p-2 w-full mb-3 rounded" required></textarea>
-                    <input id="autor" type="text" placeholder="Nome do Autor" class="border p-2 w-full mb-3 rounded" required>
-                    <input id="data" type="date" class="border p-2 w-full mb-3 rounded" required>
-    
-                    <select id="topico" class="border p-2 w-full mb-3 rounded" required>
-                        <option value="">Selecione um Tópico</option>
-                        <option value="Carreiras">Carreiras</option>
-                        <option value="Lideranças">Lideranças</option>
-                        <option value="Financeiro">Financeiro</option>
-                        <option value="Negócios">Negócios</option>
-                    </select>
-    
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Adicionar Mentoria</button>
-                </form>
-    
-                <!-- Lista de mentorias -->
-                <div id="mentoriasContainer" class="w-full mt-6 flex flex-col items-center"></div>
-    
-                <a href="my_mentorships.html" class="mt-6 bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">Voltar para Lista</a>
-            </div>
+        <div class="w-full max-w-lg bg-white p-6 rounded shadow">
+            <h1 class="text-2xl font-bold mb-4">Criar Nova Mentoria</h1>
+            <form id="mentoriaForm" class="space-y-4">
+                <input type="text" id="titulo" placeholder="Título" class="w-full p-2 border rounded" required>
+                <textarea id="descricao" placeholder="Descrição" class="w-full p-2 border rounded" required></textarea>
+                <input type="date" id="data" class="w-full p-2 border rounded" required>
+                <select id="topico" class="w-full p-2 border rounded" required>
+                    <option value="">Selecione o tópico</option>
+                    <option value="Carreiras">Carreiras</option>
+                    <option value="Lideranças">Lideranças</option>
+                    <option value="Financeiro">Financeiro</option>
+                    <option value="Negócios">Negócios</option>
+                </select>
+                <input type="text" id="autor" class="w-full p-2 border rounded bg-gray-100" readonly>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar Mentoria</button>
+                <a href="my_mentorships.html" class="inline-block ml-4 text-blue-500 hover:underline">Voltar</a>
+            </form>
         </div>
     
         <script>
-            const mentoriaForm = document.getElementById('mentoriaForm');
-            const tituloInput = document.getElementById('titulo');
-            const descricaoInput = document.getElementById('descricao');
-            const autorInput = document.getElementById('autor');
-            const dataInput = document.getElementById('data');
-            const topicoInput = document.getElementById('topico');
-            const mentoriasContainer = document.getElementById('mentoriasContainer');
+            // Carrega o primeiro perfil como autor padrão
+            fetch('http://localhost:3000/perfis')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        document.getElementById('autor').value = data[0].nome;
+                    }
+                });
     
-            let mentorias = JSON.parse(localStorage.getItem('mentorias')) || [];
-    
-            mentoriaForm.addEventListener('submit', function(e) {
+            document.getElementById('mentoriaForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const titulo = tituloInput.value.trim();
-                const descricao = descricaoInput.value.trim();
-                const autor = autorInput.value.trim();
-                const data = dataInput.value;
-                const topico = topicoInput.value;
     
-                if (titulo && descricao && autor && data && topico) {
-                    mentorias.push({ titulo, descricao, autor, data, topico, inscritos: 0, editando: false, confirmandoExclusao: false });
-                    localStorage.setItem('mentorias', JSON.stringify(mentorias));
-                    tituloInput.value = '';
-                    descricaoInput.value = '';
-                    autorInput.value = '';
-                    dataInput.value = '';
-                    topicoInput.value = '';
-                    renderMentorias();
+                const titulo = document.getElementById('titulo').value.trim();
+                const descricao = document.getElementById('descricao').value.trim();
+                const data = document.getElementById('data').value;
+                const topico = document.getElementById('topico').value;
+                const autor = document.getElementById('autor').value;
+    
+                if (titulo && descricao && data && topico && autor) {
+                    fetch('http://localhost:3000/mentorias', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ titulo, descricao, autor, data, topico })
+                    }).then(() => {
+                        window.location.href = 'my_mentorships.html';
+                    });
+                } else {
+                    alert('Preencha todos os campos.');
                 }
             });
-    
-            function renderMentorias() {
-        mentoriasContainer.innerHTML = '';
-        mentorias.forEach((mentoria, index) => {
-            const mentoriaDiv = document.createElement('div');
-            mentoriaDiv.className = 'bg-white p-4 rounded shadow mb-4 w-full flex flex-col items-center';
-    
-            if (mentoria.editando) {
-                mentoriaDiv.innerHTML = `
-                    <input id="editTitulo${index}" value="${mentoria.titulo}" class="border p-2 w-full mb-2 rounded">
-                    <textarea id="editDescricao${index}" class="border p-2 w-full mb-2 rounded">${mentoria.descricao}</textarea>
-                    <input id="editData${index}" type="date" value="${mentoria.data}" class="border p-2 w-full mb-2 rounded">
-                    <select id="editTopico${index}" class="border p-2 w-full mb-2 rounded">
-                        <option value="Carreiras" ${mentoria.topico === 'Carreiras' ? 'selected' : ''}>Carreiras</option>
-                        <option value="Lideranças" ${mentoria.topico === 'Lideranças' ? 'selected' : ''}>Lideranças</option>
-                        <option value="Financeiro" ${mentoria.topico === 'Financeiro' ? 'selected' : ''}>Financeiro</option>
-                        <option value="Negócios" ${mentoria.topico === 'Negócios' ? 'selected' : ''}>Negócios</option>
-                    </select>
-                    <div class="flex space-x-2">
-                        <button onclick="salvarEdicao(${index})" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Salvar</button>
-                        <button onclick="cancelarEdicao(${index})" class="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">Cancelar</button>
-                    </div>
-                `;
-            } else {
-                mentoriaDiv.innerHTML = `
-                    <h2 class="text-xl font-bold mb-2 text-center">${mentoria.titulo}</h2>
-                    <p class="mb-2 text-center">${mentoria.descricao}</p>
-                    <p class="text-sm text-gray-700 mb-1">Autor: <span class="font-semibold">${mentoria.autor}</span></p>
-                    <p class="text-sm text-gray-700 mb-1">Data: <span class="font-semibold">${mentoria.data}</span></p>
-                    <p class="text-sm text-gray-700 mb-2">Tópico: <span class="font-semibold">${mentoria.topico}</span></p>
-                    <p class="text-sm text-gray-600 mb-2">Inscritos: ${mentoria.inscritos}</p>
-                    <div class="flex space-x-2">
-                        <button onclick="editarMentoria(${index})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
-                        ${mentoria.confirmandoExclusao 
-                            ? `<button onclick="confirmarExclusao(${index})" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Confirme a deleção</button>`
-                            : `<button onclick="perguntarExclusao(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Excluir</button>`
-                        }
-                    </div>
-                `;
-            }
-    
-            mentoriasContainer.appendChild(mentoriaDiv);
-        });
-        localStorage.setItem('mentorias', JSON.stringify(mentorias));
-    }
-            function editarMentoria(index) {
-                mentorias[index].editando = true;
-                renderMentorias();
-            }
-    
-            function salvarEdicao(index) {
-                const novoTitulo = document.getElementById(`editTitulo${index}`).value.trim();
-                const novaDescricao = document.getElementById(`editDescricao${index}`).value.trim();
-                const novaData = document.getElementById(`editData${index}`).value;
-                const novoTopico = document.getElementById(`editTopico${index}`).value;
-    
-                if (novoTitulo && novaDescricao && novaData && novoTopico) {
-                    mentorias[index].titulo = novoTitulo;
-                    mentorias[index].descricao = novaDescricao;
-                    mentorias[index].data = novaData;
-                    mentorias[index].topico = novoTopico;
-                    mentorias[index].editando = false;
-                    renderMentorias();
-                }
-            }
-    
-            function cancelarEdicao(index) {
-                mentorias[index].editando = false;
-                renderMentorias();
-            }
-    
-            function perguntarExclusao(index) {
-                mentorias[index].confirmandoExclusao = true;
-                renderMentorias();
-            }
-    
-            function cancelarExclusao(index) {
-                mentorias[index].confirmandoExclusao = false;
-                renderMentorias();
-            }
-    
-            function confirmarExclusao(index) {
-                mentorias.splice(index, 1);
-                renderMentorias();
-            }
-    
-            renderMentorias();
-        
-            
-    
         </script>
 </body>
 </html>
