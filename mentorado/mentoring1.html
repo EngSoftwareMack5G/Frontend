@@ -9,12 +9,12 @@
 <body class="bg-gray-100 text-gray-900">
   <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
     <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
-    <a href="home.html" class="text-xl font-semibold">MackLink</a>
-    <a href="login_option.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
+    <a href="../home.html" class="text-xl font-semibold">MackLink</a>
+    <a href="../login_option.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
   </header>
 
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
-    <a href="about.html">SOBRE O PROJETO</a>
+    <a href="../about.html">SOBRE O PROJETO</a>
     <a href="recents.html">RECENTES</a>
     <a href="finance.html">FINANCEIRO</a>
     <a href="carrers.html">CARREIRA</a>
@@ -125,12 +125,12 @@
     // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token'); // Obtém o token do localStorage
-      const loginButton = document.querySelector('a[href="login_option.html"]');
+      const loginButton = document.querySelector('a[href="../login_option.html"]');
   
       if (token) {
         // Substitui o botão de login por um botão de perfil
         loginButton.textContent = 'Perfil';
-        loginButton.href = 'profile.html'; // Redireciona para a página de perfil
+        loginButton.href = '../profile.html'; // Redireciona para a página de perfil
       }
     });
   </script>
