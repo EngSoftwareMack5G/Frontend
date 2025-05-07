@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - MackLink</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-gray-200 px-6 py-4 flex justify-center items-center border-b">
+    <a href="home.html" class="text-xl font-semibold">MackLink</a>
+  </header>
+
+  <main class="flex justify-center items-center h-[70vh] px-6">
+    <div class="bg-white rounded-2xl shadow p-10 w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-6 text-center">Entrar</h2>
+      <form id="loginForm" class="space-y-4">
+        <input type="email" id="email" name="email" placeholder="Email" required
+               class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none">
+        <input type="password" id="senha" name="senha" placeholder="Senha" required
+               class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none">
+        <p id="errorMessage" class="text-red-600 text-sm text-center"></p>
+        <div class="text-sm text-center">
+          <a href="#" class="text-gray-600 hover:underline">Esqueceu a senha? Clique aqui!</a>
+        </div>
+        <div class="text-sm text-center">
+          <a href="register.html" class="text-gray-600 hover:underline">Não possui uma conta? Cadastre-se aqui!</a>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Entrar</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="bg-white text-center text-sm text-gray-500 py-8 mt-10">
+    <div class="mb-2 text-lg font-bold">Logo</div>
+    <div class="flex justify-center gap-4 text-xl mb-2">
+      <span>🐦</span>
+      <span>📘</span>
+      <span>💼</span>
+    </div>
+    <div class="flex justify-center flex-wrap gap-4">
+      <a href="#" class="hover:underline">About</a>
+      <a href="#" class="hover:underline">Authors</a>
+      <a href="#" class="hover:underline">Archive</a>
+      <a href="#" class="hover:underline">Terms and Conditions</a>
+      <a href="#" class="hover:underline">Cookie Policy</a>
+    </div>
+  </footer>
+
+  <!-- Script de autenticação -->
+  <script src="script/scriptsauth.js"></script>
+</body>
+</html>
