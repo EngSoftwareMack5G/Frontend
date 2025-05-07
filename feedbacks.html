@@ -33,5 +33,20 @@
 
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Enviar Feedback</button>
   </form>
+
+  <script>
+    // Verifica se o usuário está logado
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token'); // Obtém o token do localStorage
+      const loginButton = document.querySelector('a[href="login_option.html"]');
+  
+      if (token) {
+        // Substitui o botão de login por um botão de perfil
+        loginButton.textContent = 'Perfil';
+        loginButton.href = 'profile.html'; // Redireciona para a página de perfil
+      }
+    });
+  </script>
+  
 </body>
 </html>
