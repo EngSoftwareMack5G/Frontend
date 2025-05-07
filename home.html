@@ -10,7 +10,7 @@
   <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
     <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
     <a href="home.html" class="text-xl font-semibold">MackLink</a>
-    <a href="login_option.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
+    <a href="login.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
   </header>
 
 
@@ -91,7 +91,7 @@
     // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token'); // Obtém o token do localStorage
-      const loginButton = document.querySelector('a[href="login_option.html"]');
+      const loginButton = document.querySelector('a[href="login.html"]');
       
   
       if (token) {
