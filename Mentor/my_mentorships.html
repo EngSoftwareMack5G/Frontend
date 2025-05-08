@@ -33,93 +33,34 @@
         </div>
     
         <script>
-            let mentorias = [];
-    
-            function loadMentorias() {
-                fetch('http://localhost:3000/mentorias')
-                    .then(res => res.json())
-                    .then(data => {
-                        mentorias = data.map(m => ({ ...m, editando: false }));
-                        renderMentorias();
-                    });
-            }
-    
-            function renderMentorias() {
-                const list = document.getElementById('mentoriasList');
-                list.innerHTML = '';
-                mentorias.forEach((m, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'p-4 border rounded shadow';
-                    if (m.editando) {
-                        div.innerHTML = `
-                            <input id="editTitulo${index}" class="border p-1 w-full mb-2" value="${m.titulo}">
-                            <textarea id="editDescricao${index}" class="border p-1 w-full mb-2">${m.descricao}</textarea>
-                            <input type="date" id="editData${index}" class="border p-1 w-full mb-2" value="${m.data}">
-                            <select id="editTopico${index}" class="border p-1 w-full mb-2">
-                                <option ${m.topico === 'Carreiras' ? 'selected' : ''}>Carreiras</option>
-                                <option ${m.topico === 'Lideranças' ? 'selected' : ''}>Lideranças</option>
-                                <option ${m.topico === 'Financeiro' ? 'selected' : ''}>Financeiro</option>
-                                <option ${m.topico === 'Negócios' ? 'selected' : ''}>Negócios</option>
-                            </select>
-                            <button onclick="salvarEdicao(${index}, ${m.id})" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Salvar</button>
-                            <button onclick="cancelarEdicao(${index})" class="bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 ml-2">Cancelar</button>
-                        `;
-                    } else {
-                        div.innerHTML = `
-                            <h2 class="text-xl font-semibold">${m.titulo}</h2>
-                            <p>${m.descricao}</p>
-                            <p><span class="font-semibold">Data:</span> ${m.data}</p>
-                            <p><span class="font-semibold">Tópico:</span> ${m.topico}</p>
-                            <p><span class="font-semibold">Autor:</span> ${m.autor}</p>
-                            <p><span class="font-semibold">Inscritos:</span> ${m.inscritos}</p>
-                            <div class="mt-2">
-                                <button onclick="editarMentoria(${index})" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">Editar</button>
-                                <button onclick="confirmarExclusao(${m.id})" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 ml-2">Excluir</button>
-                            </div>
-                        `;
-                    }
-                    list.appendChild(div);
-                });
-            }
-    
-            function editarMentoria(index) {
-                mentorias[index].editando = true;
-                renderMentorias();
-            }
-    
-            function cancelarEdicao(index) {
-                mentorias[index].editando = false;
-                renderMentorias();
-            }
-    
-            function salvarEdicao(index, id) {
-                const novoTitulo = document.getElementById(`editTitulo${index}`).value.trim();
-                const novaDescricao = document.getElementById(`editDescricao${index}`).value.trim();
-                const novaData = document.getElementById(`editData${index}`).value;
-                const novoTopico = document.getElementById(`editTopico${index}`).value;
-                if (novoTitulo && novaDescricao && novaData && novoTopico) {
-                    fetch(`http://localhost:3000/mentorias/${id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            titulo: novoTitulo,
-                            descricao: novaDescricao,
-                            data: novaData,
-                            topico: novoTopico
-                        })
-                    }).then(() => loadMentorias());
-                }
-            }
-    
-            function confirmarExclusao(id) {
-                if (confirm('Tem certeza que deseja excluir esta mentoria?')) {
-                    fetch(`http://localhost:3000/mentorias/${id}`, {
-                        method: 'DELETE'
-                    }).then(() => loadMentorias());
-                }
-            }
-    
-            window.onload = loadMentorias;
+            const token = localStorage.getItem('token');
+const mentoriasList = document.getElementById('mentoriasList');
+
+async function fetchMentorias() {
+  const res = await fetch('http://localhost:8000/mentorias/', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  const mentorias = await res.json();
+  displayMentorias(mentorias);
+}
+
+function displayMentorias(mentorias) {
+  mentoriasList.innerHTML = '';
+  mentorias.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'bg-white p-4 rounded shadow';
+    div.innerHTML = `
+      <strong>Título:</strong> ${m.titulo}<br>
+      <strong>Descrição:</strong> ${m.descricao}<br>
+      <strong>Data:</strong> ${m.data_hora}<br>
+      <strong>Duração:</strong> ${m.duracao_minutos} minutos<br>
+      <strong>Tópico:</strong> ${m.topico}
+    `;
+    mentoriasList.appendChild(div);
+  });
+}
+
+fetchMentorias();
         </script>
 </body>
 </html>
