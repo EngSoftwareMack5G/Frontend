@@ -5,155 +5,144 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Mentoria</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
 
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-4 text-center">Criar Mentoria</h1>
+  <!-- Header -->
+  <header class="bg-gray-200 px-6 py-4 flex justify-center items-center border-b">
+    <a href="home.html" class="text-xl font-semibold">MackLink</a>
+  </header>
 
-    <form id="mentoriaForm" class="bg-white p-6 rounded shadow-md space-y-4">
-      <input type="hidden" id="mentoriaId">
+  <!-- Main -->
+  <main class="flex flex-col items-center px-6 py-10 w-full">
+    <div class="bg-white rounded-2xl shadow p-10 w-full max-w-xl">
+      <h2 class="text-2xl font-bold mb-6 text-center">Criar Mentoria</h2>
+      <form id="mentoriaForm" class="space-y-4">
+        <input type="text" id="titulo" name="titulo" placeholder="Título" required
+               class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none">
+        <textarea id="descricao" name="descricao" placeholder="Descrição" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none"></textarea>
+        <input type="date" id="data" name="data" required
+               class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none">
+        <select id="topico" name="topico" required
+                class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none">
+          <option value="">Selecione um tópico</option>
+          <option value="Negócios">Negócios</option>
+          <option value="Financeiro">Financeiro</option>
+          <option value="Liderança">Liderança</option>
+          <option value="Carreira">Carreira</option>
+        </select>
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+          Criar Mentoria
+        </button>
+        <p id="errorMessage" class="text-red-600 text-sm text-center"></p>
+      </form>
+    </div>
 
-      <input type="text" id="titulo" placeholder="Título" required class="w-full px-4 py-2 border rounded">
-      <textarea id="descricao" placeholder="Descrição" required class="w-full px-4 py-2 border rounded"></textarea>
-      <input type="text" id="autor" placeholder="Autor" required class="w-full px-4 py-2 border rounded">
-      <input type="text" id="data" placeholder="Data" required class="w-full px-4 py-2 border rounded">
-      <select id="topico" required class="w-full px-4 py-2 border rounded">
-        <option value="" disabled selected>Selecione o Tópico</option>
-        <option value="Negócios">Negócios</option>
-        <option value="Financeiro">Financeiro</option>
-        <option value="Liderança">Liderança</option>
-        <option value="Carreira">Carreira</option>
-      </select>
-
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Salvar Mentoria</button>
-    </form>
-
-    <h2 class="text-2xl font-bold my-6 text-center">Mentorias Cadastradas</h2>
-    <div id="mentoriasList" class="space-y-4"></div>
-  </div>
+    <!-- Lista de mentorias -->
+    <div class="bg-white rounded-2xl shadow p-10 w-full max-w-3xl mt-10">
+      <h3 class="text-xl font-bold mb-4 text-center">Mentorias Criadas</h3>
+      <ul id="mentoriasList" class="space-y-2"></ul>
+    </div>
+  </main>
 
   <script>
-    const token = localStorage.getItem('token');
     const form = document.getElementById('mentoriaForm');
-    const mentoriasList = document.getElementById('mentoriasList');
-    const mentoriaIdInput = document.getElementById('mentoriaId');
-
-    flatpickr("#data", { dateFormat: "Y-m-d" });
+    const list = document.getElementById('mentoriasList');
+    const errorMsg = document.getElementById('errorMessage');
+    const token = localStorage.getItem('token');
 
     async function fetchMentorias() {
-      const res = await fetch('http://localhost:8000/mentorias/', {
-        headers: { 'Authorization': 'Bearer ' + token }
+      const response = await fetch('http://localhost:8000/mentorias/', {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-      const mentorias = await res.json();
-      displayMentorias(mentorias);
-    }
-
-    function displayMentorias(mentorias) {
-      mentoriasList.innerHTML = '';
-      mentorias.forEach(m => {
-        const div = document.createElement('div');
-        div.className = 'bg-white p-4 rounded shadow flex justify-between items-center';
-        div.innerHTML = `
+      const mentorias = await response.json();
+      list.innerHTML = '';
+      mentorias.forEach(mentoria => {
+        const li = document.createElement('li');
+        li.className = 'p-4 border rounded flex justify-between items-center';
+        li.innerHTML = `
           <div>
-            <div><strong>Título:</strong> <span contenteditable data-field="titulo" data-id="${m.id}">${m.titulo}</span></div>
-            <div><strong>Descrição:</strong> <span contenteditable data-field="descricao" data-id="${m.id}">${m.descricao}</span></div>
-            <div><strong>Autor:</strong> <span contenteditable data-field="autor" data-id="${m.id}">${m.autor}</span></div>
-            <div><strong>Data:</strong> <span contenteditable data-field="data" data-id="${m.id}">${m.data}</span></div>
-            <div><strong>Tópico:</strong> <span contenteditable data-field="topico" data-id="${m.id}">${m.topico}</span></div>
+            <input type="text" value="${mentoria.titulo}" data-id="${mentoria.id}" class="editable border p-1 rounded w-40">
+            <input type="text" value="${mentoria.descricao}" data-id="${mentoria.id}" class="editable border p-1 rounded w-60">
+            <input type="date" value="${mentoria.data}" data-id="${mentoria.id}" class="editable border p-1 rounded">
+            <select data-id="${mentoria.id}" class="editable border p-1 rounded">
+              <option ${mentoria.topico === 'Negócios' ? 'selected' : ''}>Negócios</option>
+              <option ${mentoria.topico === 'Financeiro' ? 'selected' : ''}>Financeiro</option>
+              <option ${mentoria.topico === 'Liderança' ? 'selected' : ''}>Liderança</option>
+              <option ${mentoria.topico === 'Carreira' ? 'selected' : ''}>Carreira</option>
+            </select>
           </div>
-          <button class="deleteBtn bg-red-500 text-white px-3 py-1 rounded" data-id="${m.id}">Excluir</button>
+          <button onclick="deleteMentoria(${mentoria.id})" class="text-red-600">Excluir</button>
         `;
-        mentoriasList.appendChild(div);
-      });
-
-      document.querySelectorAll('[contenteditable]').forEach(el => {
-        el.addEventListener('blur', handleInlineEdit);
-      });
-
-      document.querySelectorAll('.deleteBtn').forEach(btn => {
-        btn.addEventListener('click', handleDelete);
+        list.appendChild(li);
+        li.querySelectorAll('.editable').forEach(input => {
+          input.addEventListener('change', () => updateMentoria(mentoria.id, li));
+        });
       });
     }
 
-    async function handleInlineEdit(e) {
-      const el = e.target;
-      const id = el.dataset.id;
-      const field = el.dataset.field;
-      const value = el.textContent;
-
-      const res = await fetch(`http://localhost:8000/mentorias/${id}`, {
+    async function updateMentoria(id, li) {
+      const inputs = li.querySelectorAll('.editable');
+      const body = {
+        titulo: inputs[0].value,
+        descricao: inputs[1].value,
+        data: inputs[2].value,
+        topico: inputs[3].value
+      };
+      await fetch(`http://localhost:8000/mentorias/${id}`, {
         method: 'PUT',
         headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ [field]: value })
+        body: JSON.stringify(body)
       });
-
-      if (!res.ok) {
-        alert('Erro ao atualizar mentoria');
-        fetchMentorias();
-      }
+      fetchMentorias();
     }
 
-    async function handleDelete(e) {
-      const id = e.target.dataset.id;
-
-      if (confirm('Tem certeza que deseja excluir esta mentoria?')) {
-        const res = await fetch(`http://localhost:8000/mentorias/${id}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        if (res.ok) {
-          fetchMentorias();
-        } else {
-          alert('Erro ao excluir mentoria');
-        }
-      }
+    async function deleteMentoria(id) {
+      await fetch(`http://localhost:8000/mentorias/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      fetchMentorias();
     }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const titulo = document.getElementById('titulo').value;
       const descricao = document.getElementById('descricao').value;
-      const autor = document.getElementById('autor').value;
       const data = document.getElementById('data').value;
       const topico = document.getElementById('topico').value;
-      const id = mentoriaIdInput.value;
 
-      const payload = { titulo, descricao, autor, data, topico };
-      let url = 'http://localhost:8000/mentorias/';
-      let method = 'POST';
+      try {
+        const response = await fetch('http://localhost:8000/mentorias/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ titulo, descricao, data, topico })
+        });
 
-      if (id) {
-        url += id;
-        method = 'PUT';
-        payload.id = parseInt(id);
-      }
+        if (!response.ok) {
+          const data = await response.json();
+          errorMsg.textContent = data.detail || 'Erro ao criar mentoria';
+          return;
+        }
 
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok) {
         form.reset();
-        mentoriaIdInput.value = '';
+        errorMsg.textContent = '';
         fetchMentorias();
-      } else {
-        alert('Erro ao salvar mentoria');
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = 'Erro ao conectar com o servidor';
       }
     });
 
     fetchMentorias();
   </script>
-
 </body>
 </html>
