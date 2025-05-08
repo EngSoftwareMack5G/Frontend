@@ -16,6 +16,11 @@
       <h2 class="text-2xl font-bold mb-4">Perfil do Usuário</h2>
       <p id="username" class="text-lg text-gray-700 mb-2">Carregando...</p>
       <p id="userType" class="text-sm text-gray-500">Carregando...</p>
+      
+      <!-- Botão Sair -->
+      <button id="logoutButton" class="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        Sair
+      </button>
     </div>
   </main>
 
@@ -50,6 +55,12 @@
         console.error('Erro ao conectar com o servidor:', error);
         alert('Erro ao carregar informações do perfil.');
       }
+
+      // Função para sair
+      document.getElementById('logoutButton').addEventListener('click', () => {
+        localStorage.removeItem('token'); // Remove o token
+        window.location.href = 'home.html'; // Redireciona para a página principal
+      });
     });
   </script>
 </body>
