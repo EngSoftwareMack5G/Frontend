@@ -89,16 +89,74 @@
 
   <script>
     // Verifica se o usuário está logado
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const token = localStorage.getItem('token'); // Obtém o token do localStorage
-      const loginButton = document.querySelector('a[href="login.html"]');
-      
-  
+      const loginButton = document.querySelector('a[href="login.html"]'); 
+      const nav = document.querySelector('nav'); 
       if (token) {
         // Substitui o botão de login por um botão de perfil
         loginButton.textContent = 'Perfil';
         loginButton.href = 'profile.html'; // Redireciona para a página de perfil
       }
+      try {
+      let userType = null;
+
+      if (token) {
+        // Envia o token para o endpoint e obtém o tipo de usuário
+        const response = await fetch('http://localhost:3002/auth/key', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`, // Envia o token no cabeçalho
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          userType = data.type; // Obtém o tipo de usuário retornado
+        }
+      }
+
+      // Atualiza o conteúdo do <nav> com base no tipo de usuário
+      if (userType === 'mentor') {
+        nav.innerHTML = `
+          <a href="/about.html">SOBRE O PROJETO</a>
+          <a href="/Mentor/my_mentorships.html">MINHAS MENTORIAS</a>
+          <a href="/feedbacks.html">FEEDBACKS</a>
+        `;
+      } else if (userType === 'mentorado') {
+        nav.innerHTML = `
+          <a href="/about.html">SOBRE O PROJETO</a>
+          <a href="/mentorado/recents.html">RECENTES</a>
+          <a href="/mentorado/finance.html">FINANCEIRO</a>
+          <a href="/mentorado/carrers.html">CARREIRA</a>
+          <a href="/mentorado/business.html">NEGÓCIOS</a>
+          <a href="/mentorado/leadership.html">LIDERANÇA</a>
+          <a href="/mentorado/my_mentorships.html">MINHAS MENTORIAS</a>
+          <a href="/feedbacks.html">FEEDBACKS</a>
+        `;
+      } else {
+        // Caso não tenha token ou o token seja inválido
+        nav.innerHTML = `
+          <a href="/about.html">SOBRE O PROJETO</a>
+          <a href="/mentorado/recents.html">RECENTES</a>
+          <a href="/mentorado/business.html">NEGÓCIOS</a>
+          <a href="/mentorado/carrers.html">CARREIRA</a>
+          <a href="/mentorado/finance.html">FINANCEIRO</a>
+          <a href="/mentorado/leadership.html">LIDERANÇA</a>
+          <a href="/feedbacks.html">FEEDBACKS</a>
+        `;
+      }
+    } catch (error) {
+      console.error('Erro ao verificar o token ou carregar o tipo de usuário:', error);
+      // Exibe as páginas padrão caso ocorra um erro
+      nav.innerHTML = `
+        <a href="/mentorado/business.html">NEGÓCIOS</a>
+        <a href="/mentorado/carrers.html">CARREIRA</a>
+        <a href="/mentorado/finance.html">FINANCEIRO</a>
+        <a href="/mentorado/leadership.html">LIDERANÇA</a>
+      `;
+    };
     });
     
   </script>
