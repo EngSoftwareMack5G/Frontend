@@ -14,60 +14,108 @@
     <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
       <a href="../about.html">SOBRE O PROJETO</a>
       <a href="../recents.html" class="font-bold text-black">RECENTES</a>
-      <a href="../my_mentorships.html">MINHAS MENTORIAS</a>
+      <a href="my_mentorships.html">MINHAS MENTORIAS</a>
       <a href="../feedbacks.html">FEEDBACKS</a>
     </nav>
     <div class="flex flex-col items-center justify-center min-h-screen p-6">
-        <div class="w-full max-w-lg bg-white p-6 rounded shadow">
-            <h1 class="text-2xl font-bold mb-4">Criar Nova Mentoria</h1>
-            <form id="mentoriaForm" class="space-y-4">
-                <input type="text" id="titulo" placeholder="Título" class="w-full p-2 border rounded" required>
-                <textarea id="descricao" placeholder="Descrição" class="w-full p-2 border rounded" required></textarea>
-                <input type="date" id="data" class="w-full p-2 border rounded" required>
-                <select id="topico" class="w-full p-2 border rounded" required>
-                    <option value="">Selecione o tópico</option>
-                    <option value="Carreiras">Carreiras</option>
-                    <option value="Lideranças">Lideranças</option>
-                    <option value="Financeiro">Financeiro</option>
-                    <option value="Negócios">Negócios</option>
-                </select>
-                <input type="text" id="autor" class="w-full p-2 border rounded bg-gray-100" readonly>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar Mentoria</button>
-                <a href="my_mentorships.html" class="inline-block ml-4 text-blue-500 hover:underline">Voltar</a>
-            </form>
+        <div class="w-full max-w-4xl bg-white p-6 rounded shadow">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Mentorias</h1>
+                <a href="criar.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Adicionar Mentoria</a>
+            </div>
+            <div id="mentoriasList" class="space-y-4"></div>
         </div>
     
         <script>
-            // Carrega o primeiro perfil como autor padrão
-            fetch('http://localhost:3000/perfis')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        document.getElementById('autor').value = data[0].nome;
+            const API_URL = 'http://localhost:8000/mentorias';  // Ajuste para sua porta
+    
+            async function fetchMentorias() {
+                const res = await fetch(API_URL, { headers: { Authorization: 'Bearer SEU_TOKEN' } });
+                const mentorias = await res.json();
+                return Promise.all(mentorias.map(async m => {
+                    const inscritosRes = await fetch(`${API_URL}/${m.id}/mentorados`, { headers: { Authorization: 'Bearer SEU_TOKEN' } });
+                    const inscritos = await inscritosRes.json();
+                    return { ...m, inscritosCount: inscritos.length };
+                }));
+            }
+    
+            async function renderMentorias() {
+                const container = document.getElementById('mentoriasList');
+                container.innerHTML = '';
+                const mentorias = await fetchMentorias();
+                mentorias.forEach((m, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'p-4 border rounded shadow flex flex-col space-y-2';
+                    if (m.editando) {
+                        card.innerHTML = `
+                            <input id="editTitulo${index}" value="${m.titulo}" class="p-2 border rounded">
+                            <textarea id="editDescricao${index}" class="p-2 border rounded">${m.descricao}</textarea>
+                            <input type="date" id="editData${index}" value="${m.data}" class="p-2 border rounded">
+                            <select id="editTopico${index}" class="p-2 border rounded">
+                                <option ${m.topico === 'Carreiras' ? 'selected' : ''}>Carreiras</option>
+                                <option ${m.topico === 'Lideranças' ? 'selected' : ''}>Lideranças</option>
+                                <option ${m.topico === 'Financeiro' ? 'selected' : ''}>Financeiro</option>
+                                <option ${m.topico === 'Negócios' ? 'selected' : ''}>Negócios</option>
+                            </select>
+                            <div class="flex space-x-2">
+                                <button class="bg-green-500 text-white px-2 py-1 rounded" onclick="salvarEdicao(${m.id}, ${index})">Salvar</button>
+                                <button class="bg-gray-500 text-white px-2 py-1 rounded" onclick="cancelarEdicao(${index})">Cancelar</button>
+                            </div>
+                        `;
+                    } else {
+                        card.innerHTML = `
+                            <h2 class="text-xl font-semibold">${m.titulo}</h2>
+                            <p>${m.descricao}</p>
+                            <p><strong>Data:</strong> ${m.data}</p>
+                            <p><strong>Autor:</strong> ${m.autor}</p>
+                            <p><strong>Tópico:</strong> ${m.topico}</p>
+                            <p><strong>Inscritos:</strong> ${m.inscritosCount}</p>
+                            <div class="flex space-x-2">
+                                <button class="bg-yellow-500 text-white px-2 py-1 rounded" onclick="editarMentoria(${index})">Editar</button>
+                                <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="confirmarDelecao(${m.id})">Excluir</button>
+                            </div>
+                        `;
                     }
+                    container.appendChild(card);
                 });
+            }
     
-            document.getElementById('mentoriaForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-    
-                const titulo = document.getElementById('titulo').value.trim();
-                const descricao = document.getElementById('descricao').value.trim();
-                const data = document.getElementById('data').value;
-                const topico = document.getElementById('topico').value;
-                const autor = document.getElementById('autor').value;
-    
-                if (titulo && descricao && data && topico && autor) {
-                    fetch('http://localhost:3000/mentorias', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ titulo, descricao, autor, data, topico })
-                    }).then(() => {
-                        window.location.href = 'my_mentorships.html';
+            async function salvarEdicao(id, index) {
+                const titulo = document.getElementById(`editTitulo${index}`).value.trim();
+                const descricao = document.getElementById(`editDescricao${index}`).value.trim();
+                const data = document.getElementById(`editData${index}`).value;
+                const topico = document.getElementById(`editTopico${index}`).value;
+                if (titulo && descricao && data && topico) {
+                    await fetch(`${API_URL}/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer SEU_TOKEN' },
+                        body: JSON.stringify({ titulo, descricao, data, topico })
                     });
-                } else {
-                    alert('Preencha todos os campos.');
+                    await renderMentorias();
                 }
-            });
+            }
+    
+            function cancelarEdicao(index) {
+                renderMentorias();
+            }
+    
+            async function editarMentoria(index) {
+                const mentorias = await fetchMentorias();
+                mentorias[index].editando = true;
+                renderMentorias();
+            }
+    
+            async function confirmarDelecao(id) {
+                if (confirm('Tem certeza que deseja excluir esta mentoria?')) {
+                    await fetch(`${API_URL}/${id}`, {
+                        method: 'DELETE',
+                        headers: { Authorization: 'Bearer SEU_TOKEN' }
+                    });
+                    await renderMentorias();
+                }
+            }
+    
+            renderMentorias();
         </script>
 </body>
 </html>
