@@ -91,7 +91,7 @@
         // Adiciona evento para desinscrever-se
         subscribeButton.addEventListener('click', async () => {
           try {
-            const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/mentorado`, {
+            const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/mentorados`, {
               method: 'DELETE',
               headers: {
                 'Authorization': `Bearer ${token}`,
