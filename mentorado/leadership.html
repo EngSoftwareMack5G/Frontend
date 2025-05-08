@@ -84,7 +84,7 @@
       // Itera sobre os objetos retornados e cria os cards dinamicamente
       mentorias.forEach(mentoria => {
         const card = document.createElement('a');
-        card.href = `mentoria${mentoria.id}.html`; // Link para a página da mentoria
+        card.href = `mentorship.html?id=${mentoria.id}`; // Link para a página da mentoria
         card.className = 'block bg-white p-4 rounded shadow hover:shadow-lg transition';
 
         card.innerHTML = `

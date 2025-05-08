@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes da Mentoria - MackLink</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
+    <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
+    <a href="../home.html" class="text-xl font-semibold">MackLink</a>
+    <a href="../login.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
+  </header>
+
+  <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
+    <a href="../about.html">SOBRE O PROJETO</a>
+    <a href="recents.html">RECENTES</a>
+    <a href="finance.html">FINANCEIRO</a>
+    <a href="carrers.html">CARREIRA</a>
+    <a href="business.html">NEGÓCIOS</a>
+    <a href="leadership.html">LIDERANÇA</a>
+    <a href="my_mentorships.html">MINHAS MENTORIAS</a>
+    <a href="../feedbacks.html">FEEDBACKS</a>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <main class="flex-grow px-6 py-10 max-w-4xl mx-auto bg-white rounded-xl shadow-md">
+  <!-- Categoria -->
+  <p id="mentoriaTopico" class="text-sm uppercase text-gray-500 font-semibold">Carregando...</p>
+  
+  <!-- Título -->
+  <h1 id="mentoriaTitulo" class="text-3xl font-bold mt-2 mb-2">Carregando...</h1>
+
+  <!-- Subtítulo -->
+  <p id="mentoriaDescricao" class="text-md text-gray-700 mb-4">Carregando...</p>
+
+  <!-- Informações -->
+  <div class="text-sm text-gray-500 flex justify-between items-center mb-6">
+    <span>por <strong id="mentoriaMentor">Carregando...</strong></span>
+    <span id="mentoriaDataHora">Carregando...</span>
+  </div>
+
+  <!-- Detalhes -->
+  <section class="mb-12">
+    <h2 class="text-xl font-bold mb-2">Detalhes</h2>
+    <p><strong>Status:</strong> <span id="mentoriaStatus">Carregando...</span></p>
+    <p><strong>Duração:</strong> <span id="mentoriaDuracao">Carregando...</span> minutos</p>
+  </section>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const params = new URLSearchParams(window.location.search);
+    const mentorshipId = params.get('id'); // Obtém o ID da mentoria da URL
+    const token = localStorage.getItem('token'); // Obtém o token do localStorage
+
+    if (!mentorshipId || !token) {
+      alert('ID da mentoria ou token não encontrado.');
+      window.location.href = 'business.html'; // Redireciona para a página de negócios
+      return;
+    }
+
+    try {
+      // Faz a requisição para o endpoint
+      const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao carregar os detalhes da mentoria');
+      }
+
+      const mentoria = await response.json(); // Obtém os dados da mentoria
+
+      // Atualiza os elementos da página com os dados retornados
+      document.getElementById('mentoriaTopico').textContent = mentoria.topico;
+      document.getElementById('mentoriaTitulo').textContent = mentoria.titulo;
+      document.getElementById('mentoriaDescricao').textContent = mentoria.descricao;
+      document.getElementById('mentoriaMentor').textContent = mentoria.mentor_email;
+      document.getElementById('mentoriaDataHora').textContent = new Date(mentoria.data_hora).toLocaleString('pt-BR');
+      document.getElementById('mentoriaStatus').textContent = mentoria.status;
+      document.getElementById('mentoriaDuracao').textContent = mentoria.duracao_minutos;
+    } catch (error) {
+      console.error('Erro ao carregar os detalhes da mentoria:', error);
+      document.querySelector('main').innerHTML = '<p class="text-red-500">Erro ao carregar os detalhes da mentoria. Tente novamente mais tarde.</p>';
+    }
+  });
+</script>
+  
+</body>
+</html>
