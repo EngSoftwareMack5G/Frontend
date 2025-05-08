@@ -5,67 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inscrição na Mentoria - MackLink</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-  <script>
-    // Função para obter o ID da mentoria da URL
-    function getMentoriaId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('id') || 'ID não especificado';
-    }
-
-    // Preencher o campo oculto com o ID da mentoria ao carregar a página
-    window.onload = function() {
-      document.getElementById('mentoria-id').value = getMentoriaId();
-    };
-  </script>
 </head>
 <body class="bg-gray-100 text-gray-900">
 
   <div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-xl shadow-lg">
-    <!-- Nome da Mentoria -->
-    <h1 class="text-3xl font-bold mb-6 text-center">Mentoria: Como Atingir Seus Objetivos</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">Mentoria: [Nome da Mentoria]</h1>
 
-    <!-- Imagem da Mentoria -->
     <div class="mb-6">
-      <img src="https://via.placeholder.com/800x400" alt="Imagem da Mentoria" class="w-full h-64 object-cover rounded-lg shadow-md">
+      <img src="[URL da Imagem]" alt="Imagem da Mentoria" class="w-full h-64 object-cover rounded-lg shadow-md">
     </div>
 
-    <!-- Data e Hora -->
     <div class="flex justify-between mb-6">
       <div>
         <h3 class="text-xl font-semibold">Data:</h3>
-        <p class="text-gray-600">15 de Junho de 2025</p>
+        <p class="text-gray-600">[Data]</p>
       </div>
       <div>
         <h3 class="text-xl font-semibold">Hora:</h3>
-        <p class="text-gray-600">18:00 - 20:00</p>
+        <p class="text-gray-600">[Hora]</p>
       </div>
     </div>
 
-
-    <!-- Duração -->
     <div class="mb-6">
       <h3 class="text-xl font-semibold">Duração:</h3>
-      <p class="text-gray-600">120 minutos</p>
+      <p class="text-gray-600">[Duração] minutos</p>
     </div>
 
-    <!-- Descrição da Mentoria -->
     <div class="mb-6">
       <h3 class="text-xl font-semibold">Descrição:</h3>
-      <p class="text-gray-600">
-        Durante esta mentoria, você aprenderá técnicas para definir metas claras, desenvolver um plano de ação e se manter motivado para alcançar seus objetivos de longo prazo. A mentoria será conduzida por especialistas do setor, que compartilharão insights práticos para ajudar você a avançar em sua jornada pessoal e profissional.
-      </p>
+      <p class="text-gray-600">[Descrição]</p>
     </div>
-
-    <!-- Formulário de Inscrição -->
-    <form action="/inscrever" method="POST" class="space-y-4">
-      <!-- Campo oculto para o ID da mentoria -->
-      <input type="hidden" id="mentoria-id" name="mentoria_id">
 
       <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
         Enviar inscrição
       </button>
     </form>
   </div>
+
+  <script>
+    document.getElementById('inscricaoForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const motivo = document.getElementById('motivo').value;
+
+      const inscricao = {
+        nome,
+        email,
+        motivo
+      };
+
+      console.log('Inscrição recebida:', inscricao);
+
+      // Aqui você pode adicionar código para enviar os dados para um servidor, se necessário.
+    });
+  </script>
 
 </body>
 </html>
