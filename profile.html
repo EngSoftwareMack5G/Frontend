@@ -104,8 +104,6 @@
 
         const username = document.getElementById('login').value;
         const password = document.getElementById('password').value;
-        const payload = { username, password }; // Cria o payload com o login e senha
-        console.log('Payload enviado:', payload); // Loga o payload no console
         try {
     const response = await fetch('http://localhost:3002/auth/delete', {
         method: 'DELETE',
