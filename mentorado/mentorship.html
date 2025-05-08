@@ -47,6 +47,11 @@
     <p><strong>Status:</strong> <span id="mentoriaStatus">Carregando...</span></p>
     <p><strong>Duração:</strong> <span id="mentoriaDuracao">Carregando...</span> minutos</p>
   </section>
+
+  <!-- Botão Inscrever-se/Desinscrever-se -->
+  <button id="subscribeButton" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+    Carregando...
+  </button>
 </main>
 
 <script>
@@ -54,6 +59,7 @@
     const params = new URLSearchParams(window.location.search);
     const mentorshipId = params.get('id'); // Obtém o ID da mentoria da URL
     const token = localStorage.getItem('token'); // Obtém o token do localStorage
+    const subscribeButton = document.getElementById('subscribeButton');
 
     if (!mentorshipId || !token) {
       alert('ID da mentoria ou token não encontrado.');
@@ -62,7 +68,81 @@
     }
 
     try {
-      // Faz a requisição para o endpoint
+      // Verifica se o usuário já está inscrito
+      const checkResponse = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/inscrito`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!checkResponse.ok) {
+        throw new Error('Erro ao verificar inscrição');
+      }
+
+      const isSubscribed = await checkResponse.json(); // Retorna true ou false
+      // Atualiza o botão com base no status de inscrição
+      if (isSubscribed.inscrito) {
+        subscribeButton.textContent = 'Desinscrever-se';
+        subscribeButton.classList.replace('bg-blue-500', 'bg-red-500');
+        subscribeButton.classList.replace('hover:bg-blue-600', 'hover:bg-red-600');
+
+        // Adiciona evento para desinscrever-se
+        subscribeButton.addEventListener('click', async () => {
+          try {
+            const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/mentorado`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (!response.ok) {
+              throw new Error('Erro ao desinscrever-se da mentoria');
+            }
+
+            alert('Você foi desinscrito com sucesso!');
+            window.location.reload(); // Recarrega a página para atualizar o estado
+          } catch (error) {
+            console.error('Erro ao desinscrever-se:', error);
+            alert('Erro ao desinscrever-se. Tente novamente mais tarde.');
+          }
+        });
+      } else {
+        subscribeButton.textContent = 'Inscrever-se';
+
+        // Adiciona evento para inscrever-se
+        subscribeButton.addEventListener('click', async () => {
+          try {
+            const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/mentorados`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (!response.ok) {
+              throw new Error('Erro ao se inscrever na mentoria');
+            }
+
+            alert('Inscrição realizada com sucesso!');
+            window.location.reload(); // Recarrega a página para atualizar o estado
+          } catch (error) {
+            console.error('Erro ao se inscrever na mentoria:', error);
+            alert('Erro ao se inscrever na mentoria. Tente novamente mais tarde.');
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao verificar inscrição:', error);
+      alert('Erro ao verificar inscrição. Tente novamente mais tarde.');
+    }
+
+    try {
+      // Faz a requisição para obter os detalhes da mentoria
       const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}`, {
         method: 'GET',
         headers: {

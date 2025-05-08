@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Minhas Mentorias - MackLink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minhas mentorias - MackLink</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
@@ -18,26 +18,22 @@
     <a href="recents.html">RECENTES</a>
     <a href="finance.html">FINANCEIRO</a>
     <a href="carrers.html">CARREIRA</a>
-    <a href="business.html">NEGÓCIOS</a>
+    <a href="business.html" >NEGÓCIOS</a>
     <a href="leadership.html">LIDERANÇA</a>
     <a href="my_mentorships.html"class="font-bold text-black">MINHAS MENTORIAS</a>
     <a href="../feedbacks.html">FEEDBACKS</a>
   </nav>
 
-<main class="flex-grow px-6 py-10 max-w-6xl mx-auto">
-  <h1 class="text-3xl font-bold mb-8">Minhas Mentorias</h1>
+  <main class="max-w-4xl mx-auto px-6 py-10">
+  <div class="mb-4 text-sm text-gray-500 uppercase">MINHAS MENTORIAS</div>
+  <h2 class="text-3xl font-bold mb-2">Mentorias que você está participando</h2>
 
-  <div id="mentorias-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <p class="col-span-full text-gray-500">Carregando suas mentorias...</p>
+  <div id="mentoriasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+    <!-- Os cards das mentorias serão inseridos aqui dinamicamente -->
   </div>
 </main>
 
-
-    </div>
-  </main>
-
-  <!-- Rodapé -->
-  <footer class="bg-gray-200 text-center text-sm text-gray-500 py-8 mt-10">
+  <footer class="bg-white text-center text-sm text-gray-500 py-8 mt-10">
     <div class="mb-2 text-lg font-bold">Logo</div>
     <div class="flex justify-center gap-4 text-xl mb-2">
       <span>🐦</span>
@@ -55,8 +51,9 @@
 
   <script>
     // Verifica se o usuário está logado
+    const token = localStorage.getItem('token');
     document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token'); // Obtém o token do localStorage
+       // Obtém o token do localStorage
       const loginButton = document.querySelector('a[href="../login.html"]');
   
       if (token) {
@@ -65,61 +62,46 @@
         loginButton.href = '../profile.html'; // Redireciona para a página de perfil
       }
     });
-  </script>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    const loginButton = document.querySelector('a[href="../login.html"]');
-    const container = document.getElementById('mentorias-container');
+    document.addEventListener('DOMContentLoaded', async () => {
+    const mentoriasContainer = document.getElementById('mentoriasContainer');
 
-    if (token) {
-      loginButton.textContent = 'Perfil';
-      loginButton.href = '../profile.html';
+    try {
+      // Faz a requisição para o endpoint
+      const response = await fetch('http://localhost:8000/mentorias/', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }});
+          console.log(token)
+      if (!response.ok) {
+        throw new Error('Erro ao carregar as mentorias');
+      }
 
-      // Buscar mentorias do backend
-      fetch('/api/my_mentorships', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token })
-      })
-      .then(response => response.json())
-      .then(mentorias => {
-        container.innerHTML = ''; // Limpa mensagem "carregando..."
+      const mentorias = await response.json(); // Obtém a lista de mentorias
 
-        if (mentorias.length === 0) {
-          container.innerHTML = '<p class="text-gray-600 col-span-full">Você ainda não se inscreveu em nenhuma mentoria.</p>';
-          return;
-        }
+      // Itera sobre os objetos retornados e cria os cards dinamicamente
+      mentorias.forEach(mentoria => {
+        const card = document.createElement('a');
+        card.href = `mentorship.html?id=${mentoria.id}`; // Link para a página da mentoria
+        card.className = 'block bg-white p-4 rounded shadow hover:shadow-lg transition';
 
-        mentorias.forEach(mentoria => {
-          const div = document.createElement('div');
-          div.className = 'bg-white rounded-lg shadow-md p-6 flex flex-col justify-between';
-          div.innerHTML = `
-            <div>
-              <h2 class="text-xl font-semibold mb-2">${mentoria.titulo}</h2>
-              <p class="text-gray-600 text-sm mb-4">Com ${mentoria.mentor}</p>
-              <p class="text-gray-700 text-sm">${mentoria.descricao}</p>
-            </div>
-            <a href="mentorship_detail.html?id=${mentoria.id}" class="mt-4 inline-block text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Acessar
-            </a>
-          `;
-          container.appendChild(div);
-        });
-      })
-      .catch(error => {
-        console.error('Erro ao buscar mentorias:', error);
-        container.innerHTML = '<p class="text-red-500 col-span-full">Erro ao carregar mentorias. Tente novamente mais tarde.</p>';
+        card.innerHTML = `
+          <div class="bg-gray-200 h-32 rounded mb-2" style="background-image: url('${mentoria.imagem}'); background-size: cover; background-position: center;"></div>
+          <h4 class="text-lg font-semibold">${mentoria.titulo}</h4>
+          <p class="text-sm text-gray-600">${mentoria.mentor_email}</p>
+          <p class="text-xs text-gray-500">${new Date(mentoria.data_hora).toLocaleDateString('pt-BR')}</p>
+        `;
+
+        mentoriasContainer.appendChild(card);
       });
-
-    } else {
-      container.innerHTML = '<p class="text-gray-600 col-span-full">Você precisa estar logado para ver suas mentorias.</p>';
+    } catch (error) {
+      console.error('Erro ao carregar mentorias:', error);
+      mentoriasContainer.innerHTML = '<p class="text-red-500">Erro ao carregar as mentorias. Tente novamente mais tarde.</p>';
     }
   });
-</script>
+  </script>
   
 </body>
 </html>
