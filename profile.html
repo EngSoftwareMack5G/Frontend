@@ -21,6 +21,30 @@
       <button id="logoutButton" class="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
         Sair
       </button>
+      <!-- Botão Deletar Usuário -->
+      <button id="deleteUserButton" class="mt-4 px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800">
+        Deletar Usuário
+      </button>
+    </div>
+    <!-- Modal para deletar usuário -->
+    <div id="deleteUserModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+      <div class="bg-white p-6 rounded shadow max-w-sm w-full">
+        <h3 class="text-lg font-bold mb-4">Confirme suas informações</h3>
+        <form id="deleteUserForm">
+          <div class="mb-4">
+            <label for="login" class="block text-sm font-medium text-gray-700">Login</label>
+            <input type="text" id="login" name="login" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
+          </div>
+          <div class="mb-4">
+            <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+            <input type="password" id="password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
+          </div>
+          <div class="flex justify-end">
+            <button type="button" id="cancelDelete" class="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800">Deletar</button>
+          </div>
+        </form>
+      </div>
     </div>
   </main>
 
@@ -60,6 +84,53 @@
       document.getElementById('logoutButton').addEventListener('click', () => {
         localStorage.removeItem('token'); // Remove o token
         window.location.href = 'home.html'; // Redireciona para a página principal
+      });
+
+      // Exibir modal para deletar usuário
+      const deleteUserModal = document.getElementById('deleteUserModal');
+      const deleteUserForm = document.getElementById('deleteUserForm');
+      const cancelDelete = document.getElementById('cancelDelete');
+
+      document.getElementById('deleteUserButton').addEventListener('click', () => {
+        deleteUserModal.classList.remove('hidden');
+      });
+
+      cancelDelete.addEventListener('click', () => {
+        deleteUserModal.classList.add('hidden');
+      });
+
+      deleteUserForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const username = document.getElementById('login').value;
+        const password = document.getElementById('password').value;
+        const payload = { username, password }; // Cria o payload com o login e senha
+        console.log('Payload enviado:', payload); // Loga o payload no console
+        try {
+    const response = await fetch('http://localhost:3002/auth/delete', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Certifique-se de que o token é válido
+        },
+        body: JSON.stringify({ username, password }) // Certifique-se de que username e password estão corretos
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erro ao deletar usuário');
+    }
+
+    const data = await response.json();
+    console.log('Usuário deletado com sucesso:', data);
+    alert('Usuário deletado com sucesso!');
+    localStorage.removeItem('token'); // Remove o token
+    window.location.href = 'home.html'; // Redireciona para a página principal após deletar o usuário
+    } catch (error) {
+    console.error('Erro:', error.message);
+    } finally {
+          deleteUserModal.classList.add('hidden');
+        }
       });
     });
   </script>
