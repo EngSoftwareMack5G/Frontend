@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Minhas Mentorias - MackLink</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
+    <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
+    <a href="../home.html" class="text-xl font-semibold">MackLink</a>
+    <a href="../profile.html" class="text-sm text-gray-600 hover:underline">Perfil</a>
+  </header>
+
+  <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
+    <a href="../about.html">SOBRE O PROJETO</a>
+    <a href="my_mentorships.html"class="font-bold text-black">MINHAS MENTORIAS</a>
+    <a href="../feedbacks.html">FEEDBACKS</a>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <main class="flex-grow px-6 py-10 max-w-6xl mx-auto">
+    <div class="flex flex-col items-center justify-center min-h-screen p-6">
+      <div class="w-full max-w-2xl flex flex-col items-center">
+          <h1 class="text-3xl font-bold mb-6 text-center">Mentorias Disponíveis</h1>
+
+          <!-- Lista de Mentorías -->
+          <div class="w-full max-w-3xl bg-white p-6 rounded shadow">
+            <h1 class="text-2xl font-bold mb-4">Lista de Mentorias</h1>
+            <div id="mentoriasList" class="space-y-4"></div>
+            <a href="criarmentoria.html" class="mt-6 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Adicionar Mentoria</a>
+        </div>
+    
+        <script>
+            const token = localStorage.getItem('token');
+            const mentoriasList = document.getElementById('mentoriasList');
+
+            // Função para buscar todas as mentorias
+            async function fetchMentorias() {
+                const res = await fetch('http://localhost:8000/mentorias/', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const mentorias = await res.json();
+                displayMentorias(mentorias);
+            }
+
+            // Função para exibir as mentorias
+            async function displayMentorias(mentorias) {
+                mentoriasList.innerHTML = '';
+                for (let m of mentorias) {
+                    const div = document.createElement('div');
+                    div.className = 'bg-white p-4 rounded shadow mb-4';
+
+                    // Exibindo os dados da mentoria
+                    div.innerHTML = `
+                        <strong>Título:</strong> ${m.titulo}<br>
+                        <strong>Descrição:</strong> ${m.descricao}<br>
+                        <strong>Data:</strong> ${new Date(m.data_hora).toLocaleString('pt-BR')}<br>
+                        <strong>Duração:</strong> ${m.duracao_minutos} minutos<br>
+                        <strong>Tópico:</strong> ${m.topico}<br><br>
+                        <strong>Mentorados:</strong><br>
+                        <ul id="mentorados-${m.id}" class="list-disc pl-5">
+                            <!-- Lista de mentorados será carregada aqui -->
+                        </ul>
+                    `;
+
+                    // Adicionando a div de mentoria na lista
+                    mentoriasList.appendChild(div);
+
+                    // Buscando mentorados dessa mentoria
+                    await fetchMentorados(m.id);
+                }
+            }
+
+            // Função para buscar os mentorados de uma mentoria
+            async function fetchMentorados(mentoriaId) {
+                const res = await fetch(`http://localhost:8000/mentorias/${mentoriaId}/mentorados`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (res.ok) {
+                    const mentorados = await res.json();
+                    const mentoradosList = document.getElementById(`mentorados-${mentoriaId}`);
+                    mentoradosList.innerHTML = ''; // Limpar a lista antes de adicionar os novos itens
+
+                    if (mentorados.length > 0) {
+                        mentorados.forEach(mentor => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = mentor.nome;  // Exibindo nome do mentorado
+                            mentoradosList.appendChild(listItem);
+                        });
+                    } else {
+                        mentoradosList.innerHTML = '<li>Nenhum mentorado cadastrado</li>';
+                    }
+                } else {
+                    console.error('Erro ao carregar mentorados:', await res.text());
+                }
+            }
+
+            fetchMentorias();
+        </script>
+</body>
+</html>
