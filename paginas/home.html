@@ -9,20 +9,20 @@
 <body class="bg-gray-100 text-gray-900">
   <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
     <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
-    <a href="home.html" class="text-xl font-semibold">MackLink</a>
-    <a href="login.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
+    <a href="home" class="text-xl font-semibold">MackLink</a>
+    <a href="login" class="text-sm text-gray-600 hover:underline">Entrar</a>
   </header>
 
 
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
-    <a href="about.html">SOBRE O PROJETO</a>
-    <!-- <a href="recents.html" class="font-bold text-black">RECENTES</a> -->
-    <a href="/Mentorado/finance.html">FINANCEIRO</a>
-    <a href="carrers.html">CARREIRA</a>
-    <a href="business.html">NEGÓCIOS</a>
-    <a href="leadership.html">LIDERANÇA</a>
-    <a href="my_mentorships.html">MINHAS MENTORIAS</a>
-    <a href="feedbacks.html">FEEDBACKS</a>
+    <a href="about">SOBRE O PROJETO</a>
+    <!-- <a href="recents" class="font-bold text-black">RECENTES</a> -->
+    <a href="/Mentorado/finance">FINANCEIRO</a>
+    <a href="carrers">CARREIRA</a>
+    <a href="business">NEGÓCIOS</a>
+    <a href="leadership">LIDERANÇA</a>
+    <a href="my_mentorships">MINHAS MENTORIAS</a>
+    <a href="feedbacks">FEEDBACKS</a>
   </nav>
 
   <!-- Main Content -->
@@ -91,12 +91,12 @@
     // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', async () => {
       const token = localStorage.getItem('token'); // Obtém o token do localStorage
-      const loginButton = document.querySelector('a[href="login.html"]'); 
-      const nav = document.querySelector('nav'); 
+      const loginButton = document.querySelector('a[href="login"]'); 
+      const nav = document.querySelector('nav');
       if (token) {
         // Substitui o botão de login por um botão de perfil
         loginButton.textContent = 'Perfil';
-        loginButton.href = 'profile.html'; // Redireciona para a página de perfil
+        loginButton.href = 'profile'; // Redireciona para a página de perfil
       }
       try {
       let userType = null;
@@ -120,43 +120,43 @@
       // Atualiza o conteúdo do <nav> com base no tipo de usuário
       if (userType === 'Mentor') {
         nav.innerHTML = `
-          <a href="/about.html">SOBRE O PROJETO</a>
-          <a href="/Mentor/my_mentorships.html">MINHAS MENTORIAS</a>
-          <a href="/feedbacks.html">FEEDBACKS</a>
+          <a href="/about">SOBRE O PROJETO</a>
+          <a href="/mentor/my_mentorships">MINHAS MENTORIAS</a>
+          <a href="/feedbacks">FEEDBACKS</a>
         `;
       } else if (userType === 'Mentorado') {
         nav.innerHTML = `
-          <a href="/about.html">SOBRE O PROJETO</a>
-          <a href="/Mentorado/finance.html">FINANCEIRO</a>
-          <a href="/Mentorado/carrers.html">CARREIRA</a>
-          <a href="/Mentorado/business.html">NEGÓCIOS</a>
-          <a href="/Mentorado/leadership.html">LIDERANÇA</a>
-          <a href="/Mentorado/my_mentorships.html">MINHAS MENTORIAS</a>
-          <a href="/feedbacks.html">FEEDBACKS</a>
+          <a href="/about">SOBRE O PROJETO</a>
+          <a href="/mentorado/finance">FINANCEIRO</a>
+          <a href="/mentorado/carrers">CARREIRA</a>
+          <a href="/mentorado/business">NEGÓCIOS</a>
+          <a href="/mentorado/leadership">LIDERANÇA</a>
+          <a href="/mentorado/my_mentorships">MINHAS MENTORIAS</a>
+          <a href="/feedbacks">FEEDBACKS</a>
         `;
       } else {
         // Caso não tenha token ou o token seja inválido
         nav.innerHTML = `
-          <a href="/about.html">SOBRE O PROJETO</a>
-          <a href="/Mentorado/business.html">NEGÓCIOS</a>
-          <a href="/Mentorado/carrers.html">CARREIRA</a>
-          <a href="/Mentorado/finance.html">FINANCEIRO</a>
-          <a href="/Mentorado/leadership.html">LIDERANÇA</a>
-          <a href="/feedbacks.html">FEEDBACKS</a>
+          <a href="/about">SOBRE O PROJETO</a>
+          <a href="/mentorado/business">NEGÓCIOS</a>
+          <a href="/mentorado/carrers">CARREIRA</a>
+          <a href="/mentorado/finance">FINANCEIRO</a>
+          <a href="/mentorado/leadership">LIDERANÇA</a>
+          <a href="/feedbacks">FEEDBACKS</a>
         `;
       }
     } catch (error) {
       console.error('Erro ao verificar o token ou carregar o tipo de usuário:', error);
       // Exibe as páginas padrão caso ocorra um erro
       nav.innerHTML = `
-        <a href="/Mentorado/business.html">NEGÓCIOS</a>
-        <a href="/Mentorado/carrers.html">CARREIRA</a>
-        <a href="/Mentorado/finance.html">FINANCEIRO</a>
-        <a href="/Mentorado/leadership.html">LIDERANÇA</a>
+        <a href="/about" class="font-bold text-black">SOBRE O PROJETO</a>
+        <a href="/mentorado/business">NEGÓCIOS</a>
+        <a href="/mentorado/carrers">CARREIRA</a>
+        <a href="/mentorado/finance">FINANCEIRO</a>
+        <a href="/mentorado/leadership">LIDERANÇA</a>
       `;
     };
     });
-    
   </script>
 
 </body>

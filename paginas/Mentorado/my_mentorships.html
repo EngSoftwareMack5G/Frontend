@@ -3,31 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carreira - MackLink</title>
+  <title>Minhas mentorias - MackLink</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
   <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
     <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
-    <a href="../home.html" class="text-xl font-semibold">MackLink</a>
-    <a href="../login.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
+    <a href="../home" class="text-xl font-semibold">MackLink</a>
+    <a href="../login" class="text-sm text-gray-600 hover:underline">Entrar</a>
   </header>
 
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
-    <a href="../about.html">SOBRE O PROJETO</a>
-    <!-- <a href="recents.html">RECENTES</a> -->
-    <a href="finance.html">FINANCEIRO</a>
-    <a href="carrers.html" class="font-bold text-black">CARREIRA</a>
-    <a href="business.html">NEGÓCIOS</a>
-    <a href="leadership.html">LIDERANÇA</a>
-    <a href="my_mentorships.html">MINHAS MENTORIAS</a>
-    <a href="../feedbacks.html">FEEDBACKS</a>
+    <a href="../about">SOBRE O PROJETO</a>
+    <!-- <a href="recents">RECENTES</a> -->
+    <a href="finance">FINANCEIRO</a>
+    <a href="carrers">CARREIRA</a>
+    <a href="business" >NEGÓCIOS</a>
+    <a href="leadership">LIDERANÇA</a>
+    <a href="my_mentorships"class="font-bold text-black">MINHAS MENTORIAS</a>
+    <a href="../feedbacks">FEEDBACKS</a>
   </nav>
 
   <main class="max-w-4xl mx-auto px-6 py-10">
-  <div class="mb-4 text-sm text-gray-500 uppercase">NEGÓCIOS</div>
-  <h2 class="text-3xl font-bold mb-2">Aprenda com empreendedores experientes</h2>
-  <p class="text-gray-700 mb-4">Mentorias voltadas para quem deseja abrir um negócio, escalar sua startup ou inovar no mercado.</p>
+  <div class="mb-4 text-sm text-gray-500 uppercase">MINHAS MENTORIAS</div>
+  <h2 class="text-3xl font-bold mb-2">Mentorias que você está participando</h2>
 
   <div id="mentoriasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
     <!-- Os cards das mentorias serão inseridos aqui dinamicamente -->
@@ -51,16 +50,16 @@
   </footer>
 
   <script>
-    const token = localStorage.getItem('token'); // Obtém o token do localStorage
     // Verifica se o usuário está logado
+    const token = localStorage.getItem('token');
     document.addEventListener('DOMContentLoaded', () => {
-    
-      const loginButton = document.querySelector('a[href="../login.html"]');
+       // Obtém o token do localStorage
+      const loginButton = document.querySelector('a[href="../login"]');
   
       if (token) {
         // Substitui o botão de login por um botão de perfil
         loginButton.textContent = 'Perfil';
-        loginButton.href = '../profile.html'; // Redireciona para a página de perfil
+        loginButton.href = '../profile'; // Redireciona para a página de perfil
       }
     });
 
@@ -69,7 +68,7 @@
 
     try {
       // Faz a requisição para o endpoint
-      const response = await fetch('http://localhost:8000/mentorias/topico/carreiras', {
+      const response = await fetch('http://localhost:8000/mentorias/', {
           method: 'GET',
           headers: {
             'Authorization': 'Bearer ' + token,
@@ -85,7 +84,7 @@
       // Itera sobre os objetos retornados e cria os cards dinamicamente
       mentorias.forEach(mentoria => {
         const card = document.createElement('a');
-        card.href = `mentorship.html?id=${mentoria.id}`; // Link para a página da mentoria
+        card.href = `mentorship?id=${mentoria.id}`; // Link para a página da mentoria
         card.className = 'block bg-white p-4 rounded shadow hover:shadow-lg transition';
 
         card.innerHTML = `
