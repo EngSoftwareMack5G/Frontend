@@ -13,14 +13,14 @@ def get_token_from_cookie(request: Request):
         raise HTTPException(status_code=401, detail="Token não encontrado no cookie")
     return token
 
-@router.post("")
+@router.post("/")
 async def criar_mentoria(request: Request):
     token = get_token_from_cookie(request)
     data = await request.json()
 
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.post(f"{BASE_MENTORIA_URL}", json=data, headers={"Authorization": f"Bearer {token}"})
+            response = await client.post(f"{BASE_MENTORIA_URL}/mentorias/", json=data, headers={"Authorization": f"Bearer {token}"})
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())
@@ -29,13 +29,12 @@ async def criar_mentoria(request: Request):
 
     return JSONResponse(status_code=201, content=response.json())
 
-@router.get("")
+@router.get("/")
 async def listar_mentorias_usuario(request: Request):
     token = get_token_from_cookie(request)
-
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.get(f"{BASE_MENTORIA_URL}", headers={"Authorization": f"Bearer {token}"})
+            response = await client.get(f"{BASE_MENTORIA_URL}/mentorias/", headers={"Authorization": f"Bearer {token}"})
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())
@@ -50,7 +49,7 @@ async def buscar_mentoria(request: Request, mentoria_id: int):
 
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.get(f"{BASE_MENTORIA_URL}/{mentoria_id}", headers={"Authorization": f"Bearer {token}"})
+            response = await client.get(f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}", headers={"Authorization": f"Bearer {token}"})
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())
@@ -66,7 +65,7 @@ async def atualizar_mentoria(request: Request, mentoria_id: int):
 
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.put(f"{BASE_MENTORIA_URL}/{mentoria_id}", json=data, headers={"Authorization": f"Bearer {token}"})
+            response = await client.put(f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}", json=data, headers={"Authorization": f"Bearer {token}"})
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())
@@ -81,7 +80,7 @@ async def deletar_mentoria(request: Request, mentoria_id: int):
 
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.delete(f"{BASE_MENTORIA_URL}/{mentoria_id}", headers={"Authorization": f"Bearer {token}"})
+            response = await client.delete(f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}", headers={"Authorization": f"Bearer {token}"})
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())
@@ -93,10 +92,10 @@ async def deletar_mentoria(request: Request, mentoria_id: int):
 @router.get("/topico/{nome_topico}")
 async def listar_por_topico(request: Request, nome_topico: str):
     token = get_token_from_cookie(request)
-
+    print(f"{BASE_MENTORIA_URL}/mentorias/topico/{nome_topico}")
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.get(f"{BASE_MENTORIA_URL}/topico/{nome_topico}", headers={"Authorization": f"Bearer {token}"})
+            response = await client.get(f"{BASE_MENTORIA_URL}/mentorias/topico/{nome_topico}", headers={"Authorization": f"Bearer {token}"})
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())
@@ -112,7 +111,7 @@ async def adicionar_mentorado(request: Request, mentoria_id: int):
     try:
         async with httpx.AsyncClient(verify=False) as client:
             response = await client.post(
-                f"{BASE_MENTORIA_URL}/{mentoria_id}/mentorados",
+                f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}/mentorados",
                 headers={"Authorization": f"Bearer {token}"}
             )
             response.raise_for_status()
@@ -133,7 +132,7 @@ async def remover_mentorado(request: Request, mentoria_id: int):
         async with httpx.AsyncClient(verify=False) as client:
             request_httpx = client.build_request(
                 "DELETE",
-                f"{BASE_MENTORIA_URL}/{mentoria_id}/mentorados",
+                f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}/mentorados",
                 json={"Mentorado_email": mentorado_email} if mentorado_email else None,
                 headers={"Authorization": f"Bearer {token}"}
             )
@@ -153,7 +152,7 @@ async def listar_mentorados(request: Request, mentoria_id: int):
     try:
         async with httpx.AsyncClient(verify=False) as client:
             response = await client.get(
-                f"{BASE_MENTORIA_URL}/{mentoria_id}/mentorados",
+                f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}/mentorados",
                 headers={"Authorization": f"Bearer {token}"}
             )
             response.raise_for_status()
@@ -171,7 +170,7 @@ async def verificar_inscricao(request: Request, mentoria_id: int):
     try:
         async with httpx.AsyncClient(verify=False) as client:
             response = await client.get(
-                f"{BASE_MENTORIA_URL}/{mentoria_id}/inscrito",
+                f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}/inscrito",
                 headers={"Authorization": f"Bearer {token}"}
             )
             response.raise_for_status()

@@ -66,7 +66,7 @@
         if (response.ok) {
           // Substitui o botão de login por um botão de perfil
           loginButton.textContent = 'Perfil';
-          loginButton.href = 'profile'; // Redireciona para a página de perfil
+          loginButton.href = '../profile'; // Redireciona para a página de perfil
         }
     });
 
@@ -75,13 +75,11 @@
 
     try {
       // Faz a requisição para o endpoint
-      const response = await fetch('http://localhost:8000/mentorias/topico/financeiro', {
+      const response = await fetch('../api/mentorias/topico/financeiro', {
           method: 'GET',
           headers: {
-            'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
           }});
-          console.log(token)
       if (!response.ok) {
         throw new Error('Erro ao carregar as mentorias');
       }

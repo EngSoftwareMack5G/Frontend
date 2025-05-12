@@ -69,19 +69,17 @@
           loginButton.href = 'profile'; // Redireciona para a página de perfil
         }
     });
-    
+
     document.addEventListener('DOMContentLoaded', async () => {
     const mentoriasContainer = document.getElementById('mentoriasContainer');
 
     try {
       // Faz a requisição para o endpoint
-      const response = await fetch('http://localhost:8000/mentorias/topico/lideranças', {
+      const response = await fetch('../api/mentorias/topico/lideranças', {
           method: 'GET',
           headers: {
-            'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
           }});
-          console.log(token)
       if (!response.ok) {
         throw new Error('Erro ao carregar as mentorias');
       }

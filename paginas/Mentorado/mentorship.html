@@ -58,7 +58,6 @@
   document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const mentorshipId = params.get('id'); // Obtém o ID da mentoria da URL
-    const token = localStorage.getItem('token'); // Obtém o token do localStorage
     const subscribeButton = document.getElementById('subscribeButton');
 
     if (!mentorshipId || !token) {
@@ -69,10 +68,9 @@
 
     try {
       // Verifica se o usuário já está inscrito
-      const checkResponse = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/inscrito`, {
+      const checkResponse = await fetch(`../api/mentorias/${mentorshipId}/inscrito`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
@@ -91,10 +89,9 @@
         // Adiciona evento para desinscrever-se
         subscribeButton.addEventListener('click', async () => {
           try {
-            const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/mentorados`, {
+            const response = await fetch(`../api/mentorias/${mentorshipId}/mentorados`, {
               method: 'DELETE',
               headers: {
-                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
               }
             });
@@ -116,10 +113,9 @@
         // Adiciona evento para inscrever-se
         subscribeButton.addEventListener('click', async () => {
           try {
-            const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}/mentorados`, {
+            const response = await fetch(`../api/mentorias/mentorias/${mentorshipId}/mentorados`, {
               method: 'POST',
               headers: {
-                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
               }
             });
@@ -143,10 +139,9 @@
 
     try {
       // Faz a requisição para obter os detalhes da mentoria
-      const response = await fetch(`http://localhost:8000/mentorias/${mentorshipId}`, {
+      const response = await fetch(`../api/mentorias/${mentorshipId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
