@@ -122,10 +122,20 @@ async def adicionar_mentorado(request: Request, mentoria_id: int):
 
     return JSONResponse(status_code=201, content={"message": "Mentorado adicionado com sucesso"})
 
+from fastapi import Request, HTTPException
+from fastapi.responses import JSONResponse, Response
+import httpx
+
 @router.delete("/{mentoria_id}/mentorados")
 async def remover_mentorado(request: Request, mentoria_id: int):
     token = get_token_from_cookie(request)
-    body = await request.json()
+
+    # Tenta ler o corpo da requisição, mas trata caso esteja vazio ou inválido
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+
     mentorado_email = body.get("Mentorado_email")
 
     try:

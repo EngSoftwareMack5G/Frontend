@@ -45,7 +45,7 @@
   <section class="mb-12">
     <h2 class="text-xl font-bold mb-2">Detalhes</h2>
     <p><strong>Status:</strong> <span id="mentoriaStatus">Carregando...</span></p>
-    <p><strong>Duração:</strong> <span id="mentoriaDuracao">Carregando...</span> minutos</p>
+    <p><strong>Duração:</strong> <span id="mentoriaDuracao">Carregando...</span></p>
   </section>
 
   <!-- Botão Inscrever-se/Desinscrever-se -->
@@ -56,19 +56,21 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
-    const params = new URLSearchParams(window.location.search);
-    const mentorshipId = params.get('id'); // Obtém o ID da mentoria da URL
+    // Extrai o ID da URL no formato /mentorship/{id}
+    const pathParts = window.location.pathname.split('/');
+    const mentorshipId = pathParts[pathParts.length - 1]; // pega o último segmento da URL
+
     const subscribeButton = document.getElementById('subscribeButton');
 
-    if (!mentorshipId || !token) {
-      alert('ID da mentoria ou token não encontrado.');
-      window.location.href = 'business'; // Redireciona para a página de negócios
+    if (!mentorshipId) {
+      alert('ID da mentoria não encontrado.');
+      window.location.href = '/business'; // Redireciona para a página de negócios
       return;
     }
 
     try {
       // Verifica se o usuário já está inscrito
-      const checkResponse = await fetch(`../api/mentorias/${mentorshipId}/inscrito`, {
+      const checkResponse = await fetch(`/api/mentorias/${mentorshipId}/inscrito`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -79,17 +81,16 @@
         throw new Error('Erro ao verificar inscrição');
       }
 
-      const isSubscribed = await checkResponse.json(); // Retorna true ou false
-      // Atualiza o botão com base no status de inscrição
+      const isSubscribed = await checkResponse.json();
+
       if (isSubscribed.inscrito) {
         subscribeButton.textContent = 'Desinscrever-se';
         subscribeButton.classList.replace('bg-blue-500', 'bg-red-500');
         subscribeButton.classList.replace('hover:bg-blue-600', 'hover:bg-red-600');
 
-        // Adiciona evento para desinscrever-se
         subscribeButton.addEventListener('click', async () => {
           try {
-            const response = await fetch(`../api/mentorias/${mentorshipId}/mentorados`, {
+            const response = await fetch(`/api/mentorias/${mentorshipId}/mentorados`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +102,7 @@
             }
 
             alert('Você foi desinscrito com sucesso!');
-            window.location.reload(); // Recarrega a página para atualizar o estado
+            window.location.reload();
           } catch (error) {
             console.error('Erro ao desinscrever-se:', error);
             alert('Erro ao desinscrever-se. Tente novamente mais tarde.');
@@ -110,10 +111,9 @@
       } else {
         subscribeButton.textContent = 'Inscrever-se';
 
-        // Adiciona evento para inscrever-se
         subscribeButton.addEventListener('click', async () => {
           try {
-            const response = await fetch(`../api/mentorias/mentorias/${mentorshipId}/mentorados`, {
+            const response = await fetch(`/api/mentorias/${mentorshipId}/mentorados`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -125,7 +125,7 @@
             }
 
             alert('Inscrição realizada com sucesso!');
-            window.location.reload(); // Recarrega a página para atualizar o estado
+            window.location.reload();
           } catch (error) {
             console.error('Erro ao se inscrever na mentoria:', error);
             alert('Erro ao se inscrever na mentoria. Tente novamente mais tarde.');
@@ -138,8 +138,7 @@
     }
 
     try {
-      // Faz a requisição para obter os detalhes da mentoria
-      const response = await fetch(`../api/mentorias/${mentorshipId}`, {
+      const response = await fetch(`/api/mentorias/${mentorshipId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -150,9 +149,8 @@
         throw new Error('Erro ao carregar os detalhes da mentoria');
       }
 
-      const mentoria = await response.json(); // Obtém os dados da mentoria
+      const mentoria = await response.json();
 
-      // Atualiza os elementos da página com os dados retornados
       document.getElementById('mentoriaTopico').textContent = mentoria.topico;
       document.getElementById('mentoriaTitulo').textContent = mentoria.titulo;
       document.getElementById('mentoriaDescricao').textContent = mentoria.descricao;

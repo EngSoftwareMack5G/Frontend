@@ -29,9 +29,16 @@ async def leadership(request: Request):
 async def inscricao(request: Request):
     return templates.TemplateResponse("Mentorado/inscricao.html", {"request": request})
 
-@router.get("/mentorship", response_class=HTMLResponse)
-async def my_mentorships(request: Request):
-    return templates.TemplateResponse("Mentorado/mentorship.html", {"request": request})
+@router.get("/mentorship/{mentorship_id}", response_class=HTMLResponse)
+async def mentorship_detail(request: Request, mentorship_id: int):
+    return templates.TemplateResponse(
+        "Mentorado/mentorship.html",
+        {
+            "request": request,
+            "mentorship_id": mentorship_id
+        }
+    )
+
 
 @router.get("/my_mentorships", response_class=HTMLResponse)
 async def my_mentorships(request: Request):
