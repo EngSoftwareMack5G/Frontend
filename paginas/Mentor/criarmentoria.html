@@ -28,9 +28,9 @@
           <input type="number" id="duracao" placeholder="Duração (minutos)" required class="w-full px-4 py-2 border rounded">
           <select id="topico" required class="w-full px-4 py-2 border rounded">
             <option value="" disabled selected>Selecione o Tópico</option>
-            <option value="negócios">Negócios</option>
+            <option value="negocios">Negócios</option>
             <option value="financeiro">Financeiro</option>
-            <option value="lideranças">Liderança</option>
+            <option value="liderancas">Liderança</option>
             <option value="carreiras">Carreira</option>
           </select>
           <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Salvar Mentoria</button>
@@ -47,7 +47,7 @@
       flatpickr("#data", { dateFormat: "Y-m-d" });
       
       async function fetchMentorias() {
-        const res = await fetch('http://localhost:8000/mentorias/', {
+        const res = await fetch('../api/mentorias/', {
           headers: { 'Authorization': 'Bearer ' + token }
         });
         const mentorias = await res.json();
@@ -110,14 +110,14 @@
             payload[input.dataset.field] = input.value;
           });
       
-          const resGet = await fetch(`http://localhost:8000/mentorias/${id}`, {
+          const resGet = await fetch(`../api/mentorias/${id}`, {
             headers: { 'Authorization': 'Bearer ' + token }
           });
           const mentoria = await resGet.json();
       
           Object.assign(mentoria, payload);
       
-          const resPut = await fetch(`http://localhost:8000/mentorias/${id}`, {
+          const resPut = await fetch(`../api/mentorias/${id}`, {
             method: 'PUT',
             headers: {
               'Authorization': 'Bearer ' + token,
@@ -136,7 +136,7 @@
       async function handleDelete(e) {
         const id = e.target.dataset.id;
         if (confirm('Tem certeza que deseja excluir esta mentoria?')) {
-          const res = await fetch(`http://localhost:8000/mentorias/${id}`, {
+          const res = await fetch(`../api/mentorias/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': 'Bearer ' + token }
           });
@@ -165,7 +165,7 @@
           topico: topico.toLowerCase()
         };
       
-        const res = await fetch('http://localhost:8000/mentorias/', {
+        const res = await fetch('../api/mentorias/', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer ' + token,

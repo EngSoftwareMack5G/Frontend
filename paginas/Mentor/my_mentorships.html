@@ -38,7 +38,7 @@
 
             // Função para buscar todas as mentorias
             async function fetchMentorias() {
-                const res = await fetch('http://localhost:8000/mentorias/', {
+                const res = await fetch('../api/mentorias/', {
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
                 const mentorias = await res.json();
@@ -75,7 +75,7 @@
 
             // Função para buscar os mentorados de uma mentoria
             async function fetchMentorados(mentoriaId) {
-                const res = await fetch(`http://localhost:8000/mentorias/${mentoriaId}/mentorados`, {
+                const res = await fetch(`../api/mentorias/${mentoriaId}/mentorados`, {
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
 
