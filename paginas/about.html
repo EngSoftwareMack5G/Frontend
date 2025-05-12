@@ -75,13 +75,13 @@
       // Atualiza o conteúdo do <nav> com base no tipo de usuário
       if (userType === 'Mentor') {
         nav.innerHTML = `
-          <a href="/about">SOBRE O PROJETO</a>
+          <a href="/about" class="font-bold text-black">SOBRE O PROJETO</a>
           <a href="/mentor/my_mentorships">MINHAS MENTORIAS</a>
           <a href="/feedbacks">FEEDBACKS</a>
         `;
       } else if (userType === 'Mentorado') {
         nav.innerHTML = `
-          <a href="/about">SOBRE O PROJETO</a>
+          <a href="/about" class="font-bold text-black">SOBRE O PROJETO</a>
           <a href="/mentorado/finance">FINANCEIRO</a>
           <a href="/mentorado/carrers">CARREIRA</a>
           <a href="/mentorado/business">NEGÓCIOS</a>
@@ -92,7 +92,7 @@
       } else {
         // Caso não tenha token ou o token seja inválido
         nav.innerHTML = `
-          <a href="/about">SOBRE O PROJETO</a>
+          <a href="/about" class="font-bold text-black">SOBRE O PROJETO</a>
           <a href="/mentorado/business">NEGÓCIOS</a>
           <a href="/mentorado/carrers">CARREIRA</a>
           <a href="/mentorado/finance">FINANCEIRO</a>
