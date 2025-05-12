@@ -51,6 +51,12 @@ async def login_user(request: Request, response: Response):
 
     return {"message": "Login bem-sucedido", "type": user_type}
 
+@router.post("/logoff")
+async def logoff_user(request: Request, response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logout bem-sucedido"}
+
+
 @router.post("/register")
 async def register_user(request: Request):
     data = await request.json()

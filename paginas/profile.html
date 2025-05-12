@@ -80,10 +80,21 @@
       }
 
       // Função para sair
-      document.getElementById('logoutButton').addEventListener('click', () => {
-        localStorage.removeItem('token'); // Remove o token
-        window.location.href = 'home'; // Redireciona para a página principal
+      document.getElementById('logoutButton').addEventListener('click', async function () {
+        const response = await fetch('/api/auth/logoff', {// URL do backend temporário
+          method: 'POST',
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.log('Erro ao deslogar usuário:', errorData.message || 'Erro ao deslogar usuário');
+          return
+        }
+
+        // Redireciona para a página principal
+        window.location.href = 'home';
       });
+
 
       // Exibir modal para deletar usuário
       const deleteUserModal = document.getElementById('deleteUserModal');
