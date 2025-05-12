@@ -57,7 +57,7 @@
       const errorElement = document.getElementById('errorMessage');
 
       try {
-        const response = await fetch('127.0.0.1/api/auth/login', {// URL do backend temporário
+        const response = await fetch('/api/auth/login', {// URL do backend temporário
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password})
@@ -68,9 +68,6 @@
           errorElement.textContent = data.message || 'Erro ao fazer login';
           return;
         }
-
-        const data = await response.json();
-        localStorage.setItem('token', data.token); // Salva o token
 
         window.location.href = '/home'; // Redireciona
       } catch (error) {
