@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-import os
 
 app = FastAPI()
 

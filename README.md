@@ -14,6 +14,8 @@ Rode o comando:
 ```cmd
 uvicorn app:app --port 80
 ```
+ou
+Rode o arquivo main.py
 
 ## Como acessar no navegador se estiver rodando local:
 URL:
