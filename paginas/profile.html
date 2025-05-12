@@ -60,10 +60,9 @@
 
       try {
         // Envia o token para o endpoint
-        const response = await fetch('http://localhost:3002/auth/key', {
+        const response = await fetch('/api/auth/key', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`, // Envia o token no cabeçalho
             'Content-Type': 'application/json'
           }
         });
@@ -105,7 +104,7 @@
         const username = document.getElementById('login').value;
         const password = document.getElementById('password').value;
         try {
-    const response = await fetch('http://localhost:3002/auth/delete', {
+    const response = await fetch('api/auth/delete', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
