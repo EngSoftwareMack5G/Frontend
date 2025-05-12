@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
   <header class="bg-gray-200 px-6 py-4 flex justify-center items-center border-b">
-    <a href="home.html" class="text-xl font-semibold">MackLink</a>
+    <a href="home" class="text-xl font-semibold">MackLink</a>
   </header>
 
   <main class="flex justify-center items-center h-[70vh] px-6">
@@ -54,7 +54,7 @@
 
       if (!token) {
         alert('Você precisa estar logado para acessar esta página.');
-        window.location.href = 'login.html'; // Redireciona para a página de login
+        window.location.href = 'login'; // Redireciona para a página de login
         return;
       }
 
@@ -83,7 +83,7 @@
       // Função para sair
       document.getElementById('logoutButton').addEventListener('click', () => {
         localStorage.removeItem('token'); // Remove o token
-        window.location.href = 'home.html'; // Redireciona para a página principal
+        window.location.href = 'home'; // Redireciona para a página principal
       });
 
       // Exibir modal para deletar usuário
@@ -123,7 +123,7 @@
     console.log('Usuário deletado com sucesso:', data);
     alert('Usuário deletado com sucesso!');
     localStorage.removeItem('token'); // Remove o token
-    window.location.href = 'home.html'; // Redireciona para a página principal após deletar o usuário
+    window.location.href = 'home'; // Redireciona para a página principal após deletar o usuário
     } catch (error) {
     console.error('Erro:', error.message);
     } finally {

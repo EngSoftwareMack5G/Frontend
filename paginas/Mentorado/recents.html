@@ -9,19 +9,19 @@
 <body class="bg-gray-100 text-gray-900">
   <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
     <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
-    <a href="../home.html" class="text-xl font-semibold">MackLink</a>
-    <a href="../login.html" class="text-sm text-gray-600 hover:underline">Entrar</a>
+    <a href="../home" class="text-xl font-semibold">MackLink</a>
+    <a href="../login" class="text-sm text-gray-600 hover:underline">Entrar</a>
   </header>
 
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
-    <a href="../about.html">SOBRE O PROJETO</a>
-    <!-- <a href="recents.html" class="font-bold text-black">RECENTES</a> -->
-    <a href="finance.html">FINANCEIRO</a>
-    <a href="carrers.html">CARREIRA</a>
-    <a href="business.html">NEGÓCIOS</a>
-    <a href="leadership.html">LIDERANÇA</a>
-    <a href="my_mentorships.html">MINHAS MENTORIAS</a>
-    <a href="../feedbacks.html">FEEDBACKS</a>
+    <a href="../about">SOBRE O PROJETO</a>
+    <!-- <a href="recents" class="font-bold text-black">RECENTES</a> -->
+    <a href="finance">FINANCEIRO</a>
+    <a href="carrers">CARREIRA</a>
+    <a href="business">NEGÓCIOS</a>
+    <a href="leadership">LIDERANÇA</a>
+    <a href="my_mentorships">MINHAS MENTORIAS</a>
+    <a href="../feedbacks">FEEDBACKS</a>
   </nav>
 
   <main class="max-w-4xl mx-auto px-6 py-10">
@@ -30,19 +30,19 @@
     <p class="text-gray-700 mb-4">Essas são as mentorias mais recentes adicionadas à nossa plataforma. Aproveite para se inscrever!</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-      <a href="mentoria21.html" class="block bg-white p-4 rounded shadow hover:shadow-lg transition">
+      <a href="mentoria21" class="block bg-white p-4 rounded shadow hover:shadow-lg transition">
         <div class="bg-gray-200 h-32 rounded mb-2"></div>
         <h4 class="text-lg font-semibold">Empreendedorismo feminino</h4>
         <p class="text-sm text-gray-600">Lívia Costa</p>
         <p class="text-xs text-gray-500">05 Maio 2025</p>
       </a>
-      <a href="mentoria22.html" class="block bg-white p-4 rounded shadow hover:shadow-lg transition">
+      <a href="mentoria22" class="block bg-white p-4 rounded shadow hover:shadow-lg transition">
         <div class="bg-gray-200 h-32 rounded mb-2"></div>
         <h4 class="text-lg font-semibold">Networking estratégico</h4>
         <p class="text-sm text-gray-600">Eduardo Tavares</p>
         <p class="text-xs text-gray-500">04 Maio 2025</p>
       </a>
-      <a href="mentoria23.html" class="block bg-white p-4 rounded shadow hover:shadow-lg transition">
+      <a href="mentoria23" class="block bg-white p-4 rounded shadow hover:shadow-lg transition">
         <div class="bg-gray-200 h-32 rounded mb-2"></div>
         <h4 class="text-lg font-semibold">Planejamento de carreira</h4>
         <p class="text-sm text-gray-600">Camila Torres</p>
@@ -53,12 +53,12 @@
     <section>
       <h3 class="font-semibold mb-4">Mentorias Relacionadas</h3>
       <div class="flex flex-wrap gap-4">
-        <a href="mentoria24.html" class="bg-white p-3 rounded shadow w-60 hover:shadow-md">
+        <a href="mentoria24" class="bg-white p-3 rounded shadow w-60 hover:shadow-md">
           <div class="bg-gray-200 h-24 rounded mb-2"></div>
           <h4 class="text-sm font-semibold">Transição de carreira</h4>
           <p class="text-xs text-gray-500">Vinícius Ferreira</p>
         </a>
-        <a href="mentoria25.html" class="bg-white p-3 rounded shadow w-60 hover:shadow-md">
+        <a href="mentoria25" class="bg-white p-3 rounded shadow w-60 hover:shadow-md">
           <div class="bg-gray-200 h-24 rounded mb-2"></div>
           <h4 class="text-sm font-semibold">Gestão do tempo</h4>
           <p class="text-xs text-gray-500">Natália Ramos</p>
@@ -87,12 +87,12 @@
     // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token'); // Obtém o token do localStorage
-      const loginButton = document.querySelector('a[href="./login.html"]');
+      const loginButton = document.querySelector('a[href="./login"]');
   
       if (token) {
         // Substitui o botão de login por um botão de perfil
         loginButton.textContent = 'Perfil';
-        loginButton.href = '../profile.html'; // Redireciona para a página de perfil
+        loginButton.href = '../profile'; // Redireciona para a página de perfil
       }
     });
   </script>

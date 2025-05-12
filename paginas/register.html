@@ -9,7 +9,7 @@
 
   <!-- Header -->
   <header class="bg-gray-200 px-6 py-4 flex justify-center items-center border-b">
-    <a href="home.html" class="text-xl font-semibold">MackLink</a>
+    <a href="home" class="text-xl font-semibold">MackLink</a>
   </header>
 
 
@@ -57,7 +57,7 @@
     }
 
     alert('Usuário registrado com sucesso!');
-    window.location.href = '/login.html'; // Redireciona para a página de login
+    window.location.href = '/login'; // Redireciona para a página de login
   } catch (error) {
     console.error('Erro de requisição:', error);
     errorElement.textContent = 'Erro ao conectar com o servidor';
