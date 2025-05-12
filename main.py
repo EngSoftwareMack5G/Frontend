@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers.back import auth
+from routers.back import auth, mentorias
 from routers.front import mentor, mentorado, pages
 
 app = FastAPI()
@@ -10,8 +10,8 @@ app.include_router(mentor.router)
 app.include_router(mentorado.router)
 
 # Rotas do back-end (APIs, autenticação, etc.)
-print(auth.router, "ROUTER")
 app.include_router(auth.router)
+app.include_router(mentorias.router)
 
 if __name__ == "__main__":
     import uvicorn
