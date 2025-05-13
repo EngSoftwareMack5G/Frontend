@@ -90,32 +90,29 @@
   <script>
     // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', async () => {
-      const token = localStorage.getItem('token'); // Obtém o token do localStorage
       const loginButton = document.querySelector('a[href="login"]'); 
       const nav = document.querySelector('nav');
-      if (token) {
+      try {
+      let userType = null;
+
+      // Envia o token para o endpoint e obtém o tipo de usuário
+      const response = await fetch('api/auth/key', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        userType = data.type; // Obtém o tipo de usuário retornado
+        
         // Substitui o botão de login por um botão de perfil
         loginButton.textContent = 'Perfil';
         loginButton.href = 'profile'; // Redireciona para a página de perfil
       }
-      try {
-      let userType = null;
 
-      if (token) {
-        // Envia o token para o endpoint e obtém o tipo de usuário
-        const response = await fetch('http://localhost:3002/auth/key', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`, // Envia o token no cabeçalho
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          userType = data.type; // Obtém o tipo de usuário retornado
-        }
-      }
+      
 
       // Atualiza o conteúdo do <nav> com base no tipo de usuário
       if (userType === 'Mentor') {

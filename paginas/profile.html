@@ -50,41 +50,40 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const token = localStorage.getItem('token'); // Obtém o token do localStorage
+      // Envia o token para o endpoint
+      const response = await fetch('/api/auth/key', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
-      if (!token) {
-        alert('Você precisa estar logado para acessar esta página.');
+      if (!response.ok) {
+        alert('Você não está logado');
         window.location.href = 'login'; // Redireciona para a página de login
-        return;
+        return
       }
 
-      try {
-        // Envia o token para o endpoint
-        const response = await fetch('http://localhost:3002/auth/key', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`, // Envia o token no cabeçalho
-            'Content-Type': 'application/json'
-          }
+      const data = await response.json(); // Obtém o JSON com o nome de usuário e tipo
+      document.getElementById('username').textContent = `Usuário: ${data.username}`;
+      document.getElementById('userType').textContent = `Tipo: ${data.type}`;
+
+      // Função para sair
+      document.getElementById('logoutButton').addEventListener('click', async function () {
+        const response = await fetch('/api/auth/logoff', {// URL do backend temporário
+          method: 'POST',
         });
 
         if (!response.ok) {
-          throw new Error('Erro ao obter informações do usuário');
+          const errorData = await response.json();
+          console.log('Erro ao deslogar usuário:', errorData.message || 'Erro ao deslogar usuário');
+          return
         }
 
-        const data = await response.json(); // Obtém o JSON com o nome de usuário e tipo
-        document.getElementById('username').textContent = `Usuário: ${data.username}`;
-        document.getElementById('userType').textContent = `Tipo: ${data.type}`;
-      } catch (error) {
-        console.error('Erro ao conectar com o servidor:', error);
-        alert('Erro ao carregar informações do perfil.');
-      }
-
-      // Função para sair
-      document.getElementById('logoutButton').addEventListener('click', () => {
-        localStorage.removeItem('token'); // Remove o token
-        window.location.href = 'home'; // Redireciona para a página principal
+        // Redireciona para a página principal
+        window.location.href = 'home';
       });
+
 
       // Exibir modal para deletar usuário
       const deleteUserModal = document.getElementById('deleteUserModal');
@@ -105,7 +104,7 @@
         const username = document.getElementById('login').value;
         const password = document.getElementById('password').value;
         try {
-    const response = await fetch('http://localhost:3002/auth/delete', {
+    const response = await fetch('api/auth/delete', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

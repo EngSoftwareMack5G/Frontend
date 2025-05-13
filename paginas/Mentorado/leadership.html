@@ -51,30 +51,35 @@
   </footer>
 
   <script>
-    const token = localStorage.getItem('token'); // Obtém o token do localStorage
     // Verifica se o usuário está logado
-    document.addEventListener('DOMContentLoaded', () => {
-      
-      const loginButton = document.querySelector('a[href="../login"]');
-  
-      if (token) {
-        // Substitui o botão de login por um botão de perfil
-        loginButton.textContent = 'Perfil';
-        loginButton.href = '../profile'; // Redireciona para a página de perfil
-      }
+    document.addEventListener('DOMContentLoaded', async function () {
+      const loginButton = document.querySelector('a[href="../login"]'); 
+      const nav = document.querySelector('nav');
+        // Envia o token para o endpoint e obtém o tipo de usuário
+        const response = await fetch('../api/auth/key', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          // Substitui o botão de login por um botão de perfil
+          loginButton.textContent = 'Perfil';
+          loginButton.href = '../profile'; // Redireciona para a página de perfil
+        }
     });
+
     document.addEventListener('DOMContentLoaded', async () => {
     const mentoriasContainer = document.getElementById('mentoriasContainer');
 
     try {
       // Faz a requisição para o endpoint
-      const response = await fetch('http://localhost:8000/mentorias/topico/lideranças', {
+      const response = await fetch('../api/mentorias/topico/liderancas', {
           method: 'GET',
           headers: {
-            'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
           }});
-          console.log(token)
       if (!response.ok) {
         throw new Error('Erro ao carregar as mentorias');
       }
@@ -84,7 +89,7 @@
       // Itera sobre os objetos retornados e cria os cards dinamicamente
       mentorias.forEach(mentoria => {
         const card = document.createElement('a');
-        card.href = `mentorship?id=${mentoria.id}`; // Link para a página da mentoria
+        card.href = `mentorship/${mentoria.id}`; // Link para a página da mentoria
         card.className = 'block bg-white p-4 rounded shadow hover:shadow-lg transition';
 
         card.innerHTML = `
