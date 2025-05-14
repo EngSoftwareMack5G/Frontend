@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, HTTPException, Response, Depends
 from fastapi.responses import JSONResponse
 import httpx
 from settings import settings
+from cachetools import TTLCache
 
 router = APIRouter(prefix="/api/mentorias", tags=["mentorias"])
 
@@ -156,6 +157,8 @@ async def remover_mentorado(request: Request, mentoria_id: int):
     return Response(status_code=204)
 
 BASE_USERS_URL = settings.USERS_SERVER_URL
+nome_cache = TTLCache(maxsize=1000, ttl=600)
+
 @router.get("/{mentoria_id}/mentorados")
 async def listar_mentorados(request: Request, mentoria_id: int):
     token = get_token_from_cookie(request)
@@ -174,12 +177,17 @@ async def listar_mentorados(request: Request, mentoria_id: int):
 
             # Substituir e-mails por nomes
             for email in emails:
+                if email in nome_cache:
+                    response[email] = nome_cache[email]
+                    continue
+
                 perfil_response = await client.get(
                     f"{BASE_USERS_URL}/perfil/nome/{email}",
                     headers={"Authorization": f"Bearer {token}"}
                 )
                 if perfil_response.status_code == 200:
                     nome = perfil_response.json().get("nome", email)
+                    nome_cache[email] = nome
                 else:
                     nome = None # fallback em caso de erro
                 response[email] = nome
