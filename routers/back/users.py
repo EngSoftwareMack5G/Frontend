@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 import httpx
 from settings import settings # Assume que settings.py tem USERS_SERVER_URL
 from fastapi.security import OAuth2PasswordBearer # Não usado diretamente aqui, mas pode ser para outros endpoints
+from pydantic import BaseModel, EmailStr
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
@@ -154,3 +155,27 @@ async def delete_profile(request: Request):
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao deletar perfil: {str(e)}")
+
+class EmailRequest(BaseModel):
+    email: EmailStr
+
+@router.get("/nome")
+async def obter_nome_por_email(request: EmailRequest):
+    """
+    Retorna o nome de um perfil a partir do e-mail informado no corpo da requisição.
+    """
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(
+                f"{BASE_USERS_URL}/nome/{request.email}"
+            )
+            response.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                raise HTTPException(status_code=404, detail="Perfil não encontrado")
+            raise HTTPException(status_code=500, detail="Erro ao consultar serviço de perfil")
+        except httpx.RequestError:
+            raise HTTPException(status_code=502, detail="Serviço de perfil indisponível")
+
+    nome = response.json()
+    return nome
