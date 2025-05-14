@@ -15,38 +15,44 @@
     }
   </script>
 </head>
-<body class="bg-gray-100 text-gray-900 px-6 py-10 max-w-xl mx-auto">
-  <h1 class="text-3xl font-bold mb-4">Deixe seu Feedback</h1>
-  <form class="bg-white p-6 rounded-xl shadow-md">
-    <label class="block text-lg font-semibold mb-2">Avaliação:</label>
-    <div class="flex text-3xl gap-2 mb-4 cursor-pointer">
-      <span class="star" onclick="setRating(1)">☆</span>
-      <span class="star" onclick="setRating(2)">☆</span>
-      <span class="star" onclick="setRating(3)">☆</span>
-      <span class="star" onclick="setRating(4)">☆</span>
-      <span class="star" onclick="setRating(5)">☆</span>
-    </div>
-    <input type="hidden" id="rating-value" name="rating" value="0" />
+<body class="bg-gray-100 text-gray-900">
+  <!-- Cabeçalho vermelho com nome MackLink -->
+  <header class="bg-[#cf001c] px-6 py-4 flex justify-center items-center border-b">
+   <a href="home" class="text-2xl text-white font-bold">MackLink</a>
+  </header>
+  </header>
 
-    <label class="block text-lg font-semibold mb-2">Comentário:</label>
-    <textarea class="w-full border rounded p-3 mb-4" rows="4" placeholder="Escreva seu comentário..."></textarea>
+  <!-- Conteúdo principal -->
+  <main class="px-6 py-10 max-w-xl mx-auto">
+    <h1 class="text-3xl font-bold mb-4">Deixe seu Feedback</h1>
+    <form class="bg-white p-6 rounded-xl shadow-md">
+      <label class="block text-lg font-semibold mb-2">Avaliação:</label>
+      <div class="flex text-3xl gap-2 mb-4 cursor-pointer">
+        <span class="star" onclick="setRating(1)">☆</span>
+        <span class="star" onclick="setRating(2)">☆</span>
+        <span class="star" onclick="setRating(3)">☆</span>
+        <span class="star" onclick="setRating(4)">☆</span>
+        <span class="star" onclick="setRating(5)">☆</span>
+      </div>
+      <input type="hidden" id="rating-value" name="rating" value="0" />
 
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Enviar Feedback</button>
-  </form>
+      <label class="block text-lg font-semibold mb-2">Comentário:</label>
+      <textarea class="w-full border rounded p-3 mb-4" rows="4" placeholder="Escreva seu comentário..."></textarea>
+
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Enviar Feedback</button>
+    </form>
+  </main>
 
   <script>
-    // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token'); // Obtém o token do localStorage
+      const token = localStorage.getItem('token');
       const loginButton = document.querySelector('a[href="login"]');
   
-      if (token) {
-        // Substitui o botão de login por um botão de perfil
+      if (token && loginButton) {
         loginButton.textContent = 'Perfil';
-        loginButton.href = 'profile'; // Redireciona para a página de perfil
+        loginButton.href = 'profile';
       }
     });
   </script>
-  
 </body>
 </html>
