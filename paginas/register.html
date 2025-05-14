@@ -8,9 +8,11 @@
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
 
   <!-- Header -->
-  <header class="bg-gray-200 px-6 py-4 flex justify-center items-center border-b">
-    <a href="home" class="text-xl font-semibold">MackLink</a>
+  <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+  <header class="bg-[#cf001c] px-6 py-4 flex justify-center items-center border-b">
+    <a href="home" class="text-2xl text-white font-bold">MackLink</a>
   </header>
+
 
 
 
@@ -44,7 +46,7 @@
   const errorElement = document.getElementById('errorMessage');
 
   try {
-    const response = await fetch('/api/auth/register', {// URL do backend temporário
+    const response = await fetch('http://localhost:3002/auth/register', {// URL do backend temporário
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password, type }), 
