@@ -5,21 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - MackLink</title>
   <script src="https://cdn.tailwindcss.com"></script>
+</head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
 
   <!-- Header -->
-  <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
   <header class="bg-[#cf001c] px-6 py-4 flex justify-center items-center border-b">
     <a href="home" class="text-2xl text-white font-bold">MackLink</a>
   </header>
 
-
-
-
   <main class="flex justify-center items-center h-[70vh] px-6">
     <div class="bg-white p-8 rounded shadow max-w-md w-full">
       <h2 class="text-2xl font-bold mb-4 text-center">Criar Conta</h2>
-      <form action="/register" method="POST" class="space-y-4">
+      <form id="registerForm" class="space-y-4">
+        <input type="text" name="nome" placeholder="Nome" required class="w-full px-4 py-2 border rounded" />
         <input type="email" name="email" placeholder="Email" required class="w-full px-4 py-2 border rounded" />
         <input type="password" name="senha" placeholder="Senha" required class="w-full px-4 py-2 border rounded" />
         
@@ -29,6 +27,21 @@
           <option value="Mentor">Mentor</option>
           <option value="Mentorado">Mentorado</option>
         </select>
+
+        <!-- Dropdown para selecionar o gênero -->
+        <select name="genero" class="w-full px-4 py-2 border rounded">
+          <option value="" selected>Selecione o gênero (opcional)</option>
+          <option value="masculino">Masculino</option>
+          <option value="feminino">Feminino</option>
+          <option value="outro">Outro</option>
+        </select>
+
+        <!-- Campo para descrição -->
+        <textarea name="descricao" placeholder="Descrição (opcional)" rows="3" class="w-full px-4 py-2 border rounded"></textarea>
+
+        <!-- Campo para upload de foto -->
+        <input type="file" name="foto" accept="image/*" required class="w-full px-4 py-2 border rounded" />
+
         <p id="errorMessage" class="text-red-600 text-sm text-center"></p>
 
         <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Cadastrar</button>
@@ -37,34 +50,86 @@
   </main>
 
   <script>
-    document.querySelector('form').addEventListener('submit', async function (e) {
-  e.preventDefault();
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-  const username = document.querySelector('input[name="email"]').value;
-  const password = document.querySelector('input[name="senha"]').value; 
-  const type = document.querySelector('select[name="type"]').value; 
-  const errorElement = document.getElementById('errorMessage');
+      const nome = document.querySelector('input[name="nome"]').value;
+      const username = document.querySelector('input[name="email"]').value;
+      const password = document.querySelector('input[name="senha"]').value;
+      const type = document.querySelector('select[name="type"]').value;
+      const genero = document.querySelector('select[name="genero"]').value;
+      const descricao = document.querySelector('textarea[name="descricao"]').value;
+      const foto = document.querySelector('input[name="foto"]').files[0];
+      const errorElement = document.getElementById('errorMessage');
 
-  try {
-    const response = await fetch('http://localhost:3002/auth/register', {// URL do backend temporário
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, type }), 
+      try {
+        // Envia os dados para o endpoint de registro
+        const registerResponse = await fetch('api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, type }),
+        });
+
+        if (!registerResponse.ok) {
+          const data = await registerResponse.json();
+          errorElement.textContent = data.message || 'Erro ao registrar usuário';
+          return;
+        }
+
+        // Faz login
+        const loginResponse = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (!loginResponse.ok) {
+          const data = await loginResponse.json();
+          errorElement.textContent = data.message || 'Erro ao fazer login';
+          return;
+        }
+
+        // Obtém o token do login
+        const loginData = await loginResponse.json();
+        const token = loginData.token;
+
+        // Se o registro for bem-sucedido, envia os dados do perfil
+        const formData = new FormData();
+        formData.append('nome', nome);
+        formData.append('descricao', descricao || ''); // Campo opcional
+        formData.append('genero', genero || ''); // Campo opcional
+        formData.append('foto', foto);
+
+        const profileResponse = await fetch('api/users', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData,
+        });
+
+        if (!profileResponse.ok) {
+          const data = await profileResponse.json();
+          errorElement.textContent = data.message || 'Erro ao criar perfil do usuário';
+
+          // Caso o POST no "api/users" falhe, deleta o usuário no "api/auth/delete"
+          await fetch('api/auth/delete', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          return;
+        }
+
+        alert('Usuário registrado com sucesso!');
+        window.location.href = '/home'; // Redireciona para a página principal
+      } catch (error) {
+        console.error('Erro de requisição:', error);
+        errorElement.textContent = 'Erro ao conectar com o servidor';
+      }
     });
-
-    if (!response.ok) {
-      const data = await response.json();
-      errorElement.textContent = data.message || 'Erro ao registrar usuário';
-      return;
-    }
-
-    alert('Usuário registrado com sucesso!');
-    window.location.href = '/login'; // Redireciona para a página de login
-  } catch (error) {
-    console.error('Erro de requisição:', error);
-    errorElement.textContent = 'Erro ao conectar com o servidor';
-  }
-});
   </script>
   
 </body>
