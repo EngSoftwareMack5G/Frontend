@@ -88,111 +88,127 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const profileImagePreview = document.getElementById('profileImagePreview');
+  document.addEventListener('DOMContentLoaded', async () => {
+    const profileImagePreview = document.getElementById('profileImagePreview');
 
-      try {
-        // Envia o token para o endpoint para obter informações do usuário
-        const response = await fetch('/api/users', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    try {
+      // Envia o token para o endpoint para obter informações do usuário
+      const response = await fetch('/api/users', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        if (!response.ok) {
-          alert('Erro ao carregar informações do perfil. Faça login novamente.');
-          window.location.href = 'login'; // Redireciona para a página de login
-          return;
-        }
-
-        const userData = await response.json(); // Obtém os dados do perfil do usuário
-
-        // Atualiza os campos da página com os dados retornados
-        document.getElementById('name').value = userData.nome || '';
-        document.getElementById('email').value = userData.email || '';
-        document.getElementById('gender').value = userData.genero || 'Não especificado';
-        document.getElementById('description').value = userData.descricao || '';
-
-        // Obtém a imagem de perfil do endpoint /api/users/imagem
-        const imageResponse = await fetch('/api/users/imagem', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (imageResponse.ok) {
-          const imageBlob = await imageResponse.blob();
-          const imageUrl = URL.createObjectURL(imageBlob);
-          profileImagePreview.src = imageUrl; // Define a URL da imagem no elemento de imagem
-          profileImagePreview.classList.remove('hidden'); // Exibe a imagem
-        }
-      } catch (error) {
-        console.error('Erro ao carregar informações do perfil:', error);
-        alert('Erro ao carregar informações do perfil. Tente novamente mais tarde.');
+      if (!response.ok) {
+        alert('Erro ao carregar informações do perfil. Faça login novamente.');
+        window.location.href = 'login'; // Redireciona para a página de login
+        return;
       }
 
-      // Função para sair
-      document.getElementById('logoutButton').addEventListener('click', async function () {
-        const response = await fetch('/api/auth/logoff', {
-          method: 'POST',
+      const userData = await response.json(); // Obtém os dados do perfil do usuário
+
+      // Atualiza os campos da página com os dados retornados
+      document.getElementById('name').value = userData.nome || '';
+      document.getElementById('email').value = userData.email || '';
+      document.getElementById('gender').value = userData.genero || 'Não especificado';
+      document.getElementById('description').value = userData.descricao || '';
+
+      // Obtém a imagem de perfil do endpoint /api/users/imagem
+      const imageResponse = await fetch('/api/users/imagem', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (imageResponse.ok) {
+        const imageBlob = await imageResponse.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+        profileImagePreview.src = imageUrl; // Define a URL da imagem no elemento de imagem
+        profileImagePreview.classList.remove('hidden'); // Exibe a imagem
+      }
+    } catch (error) {
+      console.error('Erro ao carregar informações do perfil:', error);
+      alert('Erro ao carregar informações do perfil. Tente novamente mais tarde.');
+    }
+
+    // Função para sair
+    document.getElementById('logoutButton').addEventListener('click', async function () {
+      const response = await fetch('/api/auth/logoff', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log('Erro ao deslogar usuário:', errorData.message || 'Erro ao deslogar usuário');
+        return;
+      }
+
+      // Redireciona para a página principal
+      window.location.href = 'home';
+    });
+
+    // Exibir modal para deletar usuário
+    const deleteUserModal = document.getElementById('deleteUserModal');
+    const deleteUserForm = document.getElementById('deleteUserForm');
+    const cancelDelete = document.getElementById('cancelDelete');
+
+    document.getElementById('deleteUserButton').addEventListener('click', () => {
+      deleteUserModal.classList.remove('hidden');
+    });
+
+    cancelDelete.addEventListener('click', () => {
+      deleteUserModal.classList.add('hidden');
+    });
+
+    deleteUserForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const username = document.getElementById('login').value;
+      const password = document.getElementById('password').value;
+      try {
+
+        // Deleta o perfil em api/users
+        const userDeleteResponse = await fetch('api/users', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.log('Erro ao deslogar usuário:', errorData.message || 'Erro ao deslogar usuário');
-          return;
+        if (!userDeleteResponse.ok) {
+          const errorData = await userDeleteResponse.json();
+          throw new Error(errorData.message || 'Erro ao deletar perfil em api/users');
+        }
+        
+        // Deleta o usuário em api/auth/delete
+        const authDeleteResponse = await fetch('api/auth/delete', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (!authDeleteResponse.ok) {
+          const errorData = await authDeleteResponse.json();
+          throw new Error(errorData.message || 'Erro ao deletar usuário em api/auth/delete');
         }
 
-        // Redireciona para a página principal
-        window.location.href = 'home';
-      });
+        
 
-      // Exibir modal para deletar usuário
-      const deleteUserModal = document.getElementById('deleteUserModal');
-      const deleteUserForm = document.getElementById('deleteUserForm');
-      const cancelDelete = document.getElementById('cancelDelete');
-
-      document.getElementById('deleteUserButton').addEventListener('click', () => {
-        deleteUserModal.classList.remove('hidden');
-      });
-
-      cancelDelete.addEventListener('click', () => {
+        alert('Usuário e perfil deletados com sucesso!');
+        localStorage.removeItem('token'); // Remove o token
+        window.location.href = 'home'; // Redireciona para a página principal após deletar o usuário
+      } catch (error) {
+        console.error('Erro:', error.message);
+        alert('Erro ao deletar usuário. Tente novamente mais tarde.');
+      } finally {
         deleteUserModal.classList.add('hidden');
-      });
-
-      deleteUserForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const username = document.getElementById('login').value;
-        const password = document.getElementById('password').value;
-        try {
-          const response = await fetch('api/auth/delete', {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Erro ao deletar usuário');
-          }
-
-          const data = await response.json();
-          console.log('Usuário deletado com sucesso:', data);
-          alert('Usuário deletado com sucesso!');
-          localStorage.removeItem('token'); // Remove o token
-          window.location.href = 'home'; // Redireciona para a página principal após deletar o usuário
-        } catch (error) {
-          console.error('Erro:', error.message);
-        } finally {
-          deleteUserModal.classList.add('hidden');
-        }
-      });
+      }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
