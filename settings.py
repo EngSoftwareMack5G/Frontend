@@ -8,6 +8,7 @@ load_dotenv()
 class Settings(BaseSettings):
     AUTH_SERVER_URL: str = os.getenv("AUTH_SERVER_URL", "https://localhost:3002") # https://localhost:3002
     MENTORIA_SERVER_URL: str = os.getenv("MENTORIAS_SERVER_URL", "https://localhost:8000") # https://localhost:8000
+    USERS_SERVER_URL: str = os.getenv("USERS_SERVER_URL", "https://localhost:8001") # https://localhost:8001
 
     LOGIN_USER_URL: str = f"{AUTH_SERVER_URL}/auth/login"
     REGISTER_USER_URL: str = f"{AUTH_SERVER_URL}/auth/register"
