@@ -8,13 +8,12 @@
 </head>
   
 <body class="bg-gray-100 text-gray-900">
-  <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
-    <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
-    <a href="home" class="text-xl font-semibold">MackLink</a>
-    <a href="login" class="text-sm text-gray-600 hover:underline">Entrar</a>
+   <header class="bg-[#cf001c] px-6 py-3 flex justify-between items-center border-b">
+    <a href="home" class="text-xl font-bold text-white">MackLink</a>
+    <a href="login" class="text-sm text-white hover:underline">Entrar</a>
   </header>
 
-  <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
+   <nav class="bg-gray-100 border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-black">
     <a href="about" class="font-bold text-black">SOBRE O PROJETO</a>
     <!-- <a href="recents" class="font-bold text-black">RECENTES</a> -->
     <a href="/Mentorado/finance">FINANCEIRO</a>
@@ -25,7 +24,9 @@
     <a href="feedbacks">FEEDBACKS</a>
   </nav>
   
-  <h1 class="text-3xl font-bold mb-6 text-center">Sobre o Projeto</h1>
+ <h1 class="text-2xl font-bold mb-6 text-center text-white bg-[#cf001c] py-4 rounded">
+  Sobre o Projeto
+</h1>
 
   <section class="bg-white p-6 rounded-xl shadow-md space-y-4 text-justify">
     <p>
@@ -48,29 +49,32 @@
   <script>
     // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('token'); // Obtém o token do localStorage
       const loginButton = document.querySelector('a[href="login"]'); 
       const nav = document.querySelector('nav');
-      try {
-      let userType = null;
-
-      // Envia o token para o endpoint e obtém o tipo de usuário
-      const response = await fetch('api/auth/key', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        userType = data.type; // Obtém o tipo de usuário retornado
-        
+      if (token) {
         // Substitui o botão de login por um botão de perfil
         loginButton.textContent = 'Perfil';
         loginButton.href = 'profile'; // Redireciona para a página de perfil
       }
+      try {
+      let userType = null;
 
-      
+      if (token) {
+        // Envia o token para o endpoint e obtém o tipo de usuário
+        const response = await fetch('http://localhost:3002/auth/key', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`, // Envia o token no cabeçalho
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          userType = data.type; // Obtém o tipo de usuário retornado
+        }
+      }
 
       // Atualiza o conteúdo do <nav> com base no tipo de usuário
       if (userType === 'Mentor') {
@@ -93,9 +97,9 @@
         // Caso não tenha token ou o token seja inválido
         nav.innerHTML = `
           <a href="/about" class="font-bold text-black">SOBRE O PROJETO</a>
-          <a href="/mentorado/business">NEGÓCIOS</a>
-          <a href="/mentorado/carrers">CARREIRA</a>
           <a href="/mentorado/finance">FINANCEIRO</a>
+          <a href="/mentorado/carrers">CARREIRA</a>
+          <a href="/mentorado/business">NEGÓCIOS</a>
           <a href="/mentorado/leadership">LIDERANÇA</a>
           <a href="/feedbacks">FEEDBACKS</a>
         `;

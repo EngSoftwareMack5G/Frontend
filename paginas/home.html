@@ -7,25 +7,24 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
-  <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
-    <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
-    <a href="home" class="text-xl font-semibold">MackLink</a>
-    <a href="login" class="text-sm text-gray-600 hover:underline">Entrar</a>
+  <!-- HEADER COM FUNDO VERMELHO -->
+  <header class="bg-[#cf001c] px-6 py-4 flex justify-between items-center border-b">
+    <a href="home" class="text-xl font-bold text-white">MackLink</a>
+    <a href="login" class="text-sm text-white hover:underline">Entrar</a>
   </header>
 
-
-  <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
-    <a href="about">SOBRE O PROJETO</a>
-    <!-- <a href="recents" class="font-bold text-black">RECENTES</a> -->
-    <a href="/Mentorado/finance">FINANCEIRO</a>
-    <a href="carrers">CARREIRA</a>
-    <a href="business">NEGÓCIOS</a>
-    <a href="leadership">LIDERANÇA</a>
-    <a href="my_mentorships">MINHAS MENTORIAS</a>
-    <a href="feedbacks">FEEDBACKS</a>
+  <!-- NAV -->
+  <nav class="bg-gray-100 border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold">
+    <a href="about" class="hover:underline">SOBRE O PROJETO</a>
+    <a href="/Mentorado/finance" class="hover:underline">FINANCEIRO</a>
+    <a href="carrers" class="hover:underline">CARREIRA</a>
+    <a href="business" class="hover:underline">NEGÓCIOS</a>
+    <a href="leadership" class="hover:underline">LIDERANÇA</a>
+    <a href="my_mentorships" class="hover:underline">MINHAS MENTORIAS</a>
+    <a href="feedbacks" class="hover:underline">FEEDBACKS</a>
   </nav>
 
-  <!-- Main Content -->
+  <!-- CONTEÚDO PRINCIPAL -->
   <main class="flex-grow px-6 py-10 max-w-5xl mx-auto">
     <!-- Introdução -->
     <section class="mb-12">
@@ -71,90 +70,79 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-200 text-center text-sm text-gray-500 py-8">
+   <footer class="bg-white text-center text-sm text-gray-500 py-8 mt-10">
     <div class="mb-2 text-lg font-bold">Logo</div>
-    <div class="flex justify-center gap-4 text-xl mb-2">
-      <span>🐦</span>
-      <span>📘</span>
-      <span>💼</span>
-    </div>
     <div class="flex justify-center flex-wrap gap-4">
       <a href="#" class="hover:underline">About</a>
-      <a href="#" class="hover:underline">Authors</a>
-      <a href="#" class="hover:underline">Archive</a>
       <a href="#" class="hover:underline">Terms and Conditions</a>
       <a href="#" class="hover:underline">Cookie Policy</a>
     </div>
   </footer>
 
+  <!-- SCRIPT DE LOGIN E MENU -->
   <script>
-    // Verifica se o usuário está logado
     document.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('token');
       const loginButton = document.querySelector('a[href="login"]'); 
       const nav = document.querySelector('nav');
-      try {
-      let userType = null;
-
-      // Envia o token para o endpoint e obtém o tipo de usuário
-      const response = await fetch('api/auth/key', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        userType = data.type; // Obtém o tipo de usuário retornado
-        
-        // Substitui o botão de login por um botão de perfil
+      if (token) {
         loginButton.textContent = 'Perfil';
-        loginButton.href = 'profile'; // Redireciona para a página de perfil
+        loginButton.href = 'profile';
       }
+      try {
+        let userType = null;
+        if (token) {
+          const response = await fetch('http://localhost:3002/auth/key', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
 
-      
+          if (response.ok) {
+            const data = await response.json();
+            userType = data.type;
+          }
+        }
 
-      // Atualiza o conteúdo do <nav> com base no tipo de usuário
-      if (userType === 'Mentor') {
+        if (userType === 'Mentor') {
+          nav.innerHTML = `
+            <a href="/about" class="hover:underline">SOBRE O PROJETO</a>
+            <a href="/mentor/my_mentorships" class="hover:underline">MINHAS MENTORIAS</a>
+            <a href="/feedbacks" class="hover:underline">FEEDBACKS</a>
+          `;
+        } else if (userType === 'Mentorado') {
+          nav.innerHTML = `
+            <a href="/about" class="hover:underline">SOBRE O PROJETO</a>
+            <a href="/mentorado/finance" class="hover:underline">FINANCEIRO</a>
+            <a href="/mentorado/carrers" class="hover:underline">CARREIRA</a>
+            <a href="/mentorado/business" class="hover:underline">NEGÓCIOS</a>
+            <a href="/mentorado/leadership" class="hover:underline">LIDERANÇA</a>
+            <a href="/mentorado/my_mentorships" class="hover:underline">MINHAS MENTORIAS</a>
+            <a href="/feedbacks" class="hover:underline">FEEDBACKS</a>
+          `;
+        } else {
+          nav.innerHTML = `
+            <a href="/about" class="hover:underline">SOBRE O PROJETO</a>
+            <a href="/mentorado/finance" class="hover:underline">FINANCEIRO</a>
+            <a href="/mentorado/carrers" class="hover:underline">CARREIRA</a>
+	    <a href="/mentorado/business" class="hover:underline">NEGÓCIOS</a>
+            <a href="/mentorado/leadership" class="hover:underline">LIDERANÇA</a>
+            <a href="/feedbacks" class="hover:underline">FEEDBACKS</a>
+          `;
+        }
+      } catch (error) {
+        console.error('Erro ao verificar token:', error);
         nav.innerHTML = `
-          <a href="/about">SOBRE O PROJETO</a>
-          <a href="/mentor/my_mentorships">MINHAS MENTORIAS</a>
-          <a href="/feedbacks">FEEDBACKS</a>
-        `;
-      } else if (userType === 'Mentorado') {
-        nav.innerHTML = `
-          <a href="/about">SOBRE O PROJETO</a>
-          <a href="/mentorado/finance">FINANCEIRO</a>
-          <a href="/mentorado/carrers">CARREIRA</a>
-          <a href="/mentorado/business">NEGÓCIOS</a>
-          <a href="/mentorado/leadership">LIDERANÇA</a>
-          <a href="/mentorado/my_mentorships">MINHAS MENTORIAS</a>
-          <a href="/feedbacks">FEEDBACKS</a>
-        `;
-      } else {
-        // Caso não tenha token ou o token seja inválido
-        nav.innerHTML = `
-          <a href="/about">SOBRE O PROJETO</a>
-          <a href="/mentorado/business">NEGÓCIOS</a>
-          <a href="/mentorado/carrers">CARREIRA</a>
-          <a href="/mentorado/finance">FINANCEIRO</a>
-          <a href="/mentorado/leadership">LIDERANÇA</a>
-          <a href="/feedbacks">FEEDBACKS</a>
+          <a href="/about" class="hover:underline">SOBRE O PROJETO</a>
+          <a href="/mentorado/finance" class="hover:underline">FINANCEIRO</a>
+          <a href="/mentorado/carrers" class="hover:underline">CARREIRA</a>
+          <a href="/mentorado/business" class="hover:underline">NEGÓCIOS</a>
+          <a href="/mentorado/leadership" class="hover:underline">LIDERANÇA</a>
         `;
       }
-    } catch (error) {
-      console.error('Erro ao verificar o token ou carregar o tipo de usuário:', error);
-      // Exibe as páginas padrão caso ocorra um erro
-      nav.innerHTML = `
-        <a href="/about" class="font-bold text-black">SOBRE O PROJETO</a>
-        <a href="/mentorado/business">NEGÓCIOS</a>
-        <a href="/mentorado/carrers">CARREIRA</a>
-        <a href="/mentorado/finance">FINANCEIRO</a>
-        <a href="/mentorado/leadership">LIDERANÇA</a>
-      `;
-    };
     });
   </script>
-
 </body>
 </html>

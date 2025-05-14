@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, HTTPException, Response, Depends
 from fastapi.responses import JSONResponse
 import httpx
 from settings import settings
+from cachetools import TTLCache
 
 router = APIRouter(prefix="/api/mentorias", tags=["mentorias"])
 
@@ -155,23 +156,48 @@ async def remover_mentorado(request: Request, mentoria_id: int):
 
     return Response(status_code=204)
 
+BASE_USERS_URL = settings.USERS_SERVER_URL
+nome_cache = TTLCache(maxsize=1000, ttl=600)
+
 @router.get("/{mentoria_id}/mentorados")
 async def listar_mentorados(request: Request, mentoria_id: int):
     token = get_token_from_cookie(request)
 
+    response = {}
+
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.get(
+            # Obter e-mails dos mentorados
+            emails_response = await client.get(
                 f"{BASE_MENTORIA_URL}/mentorias/{mentoria_id}/mentorados",
                 headers={"Authorization": f"Bearer {token}"}
             )
-            response.raise_for_status()
+            emails_response.raise_for_status()
+            emails = emails_response.json()
+
+            # Substituir e-mails por nomes
+            for email in emails:
+                if email in nome_cache:
+                    response[email] = nome_cache[email]
+                    continue
+
+                perfil_response = await client.get(
+                    f"{BASE_USERS_URL}/perfil/nome/{email}",
+                    headers={"Authorization": f"Bearer {token}"}
+                )
+                if perfil_response.status_code == 200:
+                    nome = perfil_response.json().get("nome", email)
+                    nome_cache[email] = nome
+                else:
+                    nome = None # fallback em caso de erro
+                response[email] = nome
+
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao listar mentorados: {str(e)}")
 
-    return response.json()
+    return response
 
 @router.get("/{mentoria_id}/inscrito")
 async def verificar_inscricao(request: Request, mentoria_id: int):
