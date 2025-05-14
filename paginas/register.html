@@ -44,7 +44,7 @@
   const errorElement = document.getElementById('errorMessage');
 
   try {
-    const response = await fetch('http://localhost:3002/auth/register', {// URL do backend temporário
+    const response = await fetch('/api/auth/register', {// URL do backend temporário
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password, type }), 
