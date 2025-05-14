@@ -60,7 +60,7 @@
                         <strong>Duração:</strong> ${m.duracao_minutos} minutos<br>
                         <strong>Tópico:</strong> ${m.topico}<br><br>
                         <strong>Mentorados:</strong><br>
-                        <ul id="mentorados-${m.id}" class="list-disc pl-5">
+                        <ul id="mentoradosList-${m.id}" class="list-disc pl-5">
                             <!-- Lista de mentorados será carregada aqui -->
                         </ul>
                     `;
@@ -81,13 +81,13 @@
 
                 if (res.ok) {
                     const mentorados = await res.json();
-                    const mentoradosList = document.getElementById(`mentorados-${mentoriaId}`);
+                    const mentoradosList = document.getElementById(`mentoradosList-${mentoriaId}`);
                     mentoradosList.innerHTML = ''; // Limpar a lista antes de adicionar os novos itens
 
                     if (mentorados.length > 0) {
-                        mentorados.forEach(mentor => {
+                        mentorados.forEach(mentorado => {
                             const listItem = document.createElement('li');
-                            listItem.textContent = mentor.nome;  // Exibindo nome do mentorado
+                            listItem.textContent = mentorado.nome;  // Exibindo nome do mentorado
                             mentoradosList.appendChild(listItem);
                         });
                     } else {
