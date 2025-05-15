@@ -128,21 +128,20 @@
         // Caso não tenha token ou o token seja inválido
         nav.innerHTML = `
           <a href="/about">SOBRE O PROJETO</a>
-          <a href="/mentorado/business">NEGÓCIOS</a>
-          <a href="/mentorado/carrers">CARREIRA</a>
           <a href="/mentorado/finance">FINANCEIRO</a>
+          <a href="/mentorado/carrers">CARREIRA</a>
+          <a href="/mentorado/business">NEGÓCIOS</a>
           <a href="/mentorado/leadership">LIDERANÇA</a>
-          <a href="/feedbacks">FEEDBACKS</a>
         `;
       }
     } catch (error) {
       console.error('Erro ao verificar o token ou carregar o tipo de usuário:', error);
       // Exibe as páginas padrão caso ocorra um erro
       nav.innerHTML = `
-        <a href="/about" class="font-bold text-black">SOBRE O PROJETO</a>
-        <a href="/mentorado/business">NEGÓCIOS</a>
-        <a href="/mentorado/carrers">CARREIRA</a>
+        <a href="/about">SOBRE O PROJETO</a>
         <a href="/mentorado/finance">FINANCEIRO</a>
+        <a href="/mentorado/carrers">CARREIRA</a>
+        <a href="/mentorado/business">NEGÓCIOS</a>
         <a href="/mentorado/leadership">LIDERANÇA</a>
       `;
     };
