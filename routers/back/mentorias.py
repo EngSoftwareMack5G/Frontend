@@ -92,11 +92,9 @@ async def deletar_mentoria(request: Request, mentoria_id: int):
 
 @router.get("/topico/{nome_topico}")
 async def listar_por_topico(request: Request, nome_topico: str):
-    token = get_token_from_cookie(request)
-    print(f"{BASE_MENTORIA_URL}/mentorias/topico/{nome_topico}")
     try:
         async with httpx.AsyncClient(verify=False) as client:
-            response = await client.get(f"{BASE_MENTORIA_URL}/mentorias/topico/{nome_topico}", headers={"Authorization": f"Bearer {token}"})
+            response = await client.get(f"{BASE_MENTORIA_URL}/mentorias/topico/{nome_topico}")
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         return JSONResponse(status_code=exc.response.status_code, content=exc.response.json())

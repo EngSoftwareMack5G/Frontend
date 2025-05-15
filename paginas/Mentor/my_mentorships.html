@@ -7,10 +7,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
-  <header class="bg-white px-6 py-4 flex justify-between items-center border-b">
-    <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm">
-    <a href="../home" class="text-xl font-semibold">MackLink</a>
-    <a href="../profile" class="text-sm text-gray-600 hover:underline">Perfil</a>
+  <header class="bg-[#cf001c] px-6 py-4 flex justify-between items-center border-b">
+    <a href="../home" class="text-xl font-bold text-white">MackLink</a>
+    <a href="../profile" class="text-sm text-white hover:underline">Perfil</a>
   </header>
 
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
@@ -75,21 +74,22 @@
 
             // Função para buscar os mentorados de uma mentoria
             async function fetchMentorados(mentoriaId) {
-                const res = await fetch(`../api/mentorias/${mentoriaId}/mentorados`, {
-                    headers: { 'Authorization': 'Bearer ' + token }
-                });
+                const res = await fetch(`../api/mentorias/${mentoriaId}/mentorados`);
 
                 if (res.ok) {
                     const mentorados = await res.json();
                     const mentoradosList = document.getElementById(`mentoradosList-${mentoriaId}`);
                     mentoradosList.innerHTML = ''; // Limpar a lista antes de adicionar os novos itens
 
-                    if (mentorados.length > 0) {
-                        mentorados.forEach(mentorado => {
-                            const listItem = document.createElement('li');
-                            listItem.textContent = mentorado.nome;  // Exibindo nome do mentorado
-                            mentoradosList.appendChild(listItem);
-                        });
+                    const emails = Object.keys(mentorados)
+
+                    if (emails.length > 0) {
+                        emails.forEach(key => {
+                        const mentorado = mentorados[key];
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = mentorado ?? key;  // Exibindo nome do mentorado
+                        mentoradosList.appendChild(listItem);
+                    });
                     } else {
                         mentoradosList.innerHTML = '<li>Nenhum mentorado cadastrado</li>';
                     }
