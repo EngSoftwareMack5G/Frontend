@@ -87,7 +87,7 @@
                         emails.forEach(key => {
                         const mentorado = mentorados[key];
                         const listItem = document.createElement('li');
-                        listItem.innerHTML = mentorado ?? key;  // Exibindo nome do mentorado
+                        listItem.innerHTML = `${mentorado ?? key} - ${key}`;  // Exibindo nome do mentorado
                         mentoradosList.appendChild(listItem);
                     });
                     } else {
