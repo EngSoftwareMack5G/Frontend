@@ -7,10 +7,10 @@
   <title>Negócios - MackLink</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
   <header class="bg-[#cf001c] px-6 py-4 flex justify-between items-center border-b">
     <a href="../home" class="text-xl font-bold text-white">MackLink</a>
-    <a href="../login" class="text-sm text-white hover:underline">Entrar</a>
+    <a href="../profile" class="text-sm text-white hover:underline">Perfil</a>
   </header>
 
   <nav class="bg-white border-b px-6 py-3 flex flex-wrap gap-6 justify-center text-sm font-semibold text-gray-700">
@@ -24,7 +24,7 @@
     <a href="../feedbacks">FEEDBACKS</a>
   </nav>
 
-  <main class="max-w-4xl mx-auto px-6 py-10">
+  <main class="flex-grow max-w-4xl mx-auto px-6 py-10">
   <div class="mb-4 text-sm text-gray-500 uppercase">NEGÓCIOS</div>
   <h2 class="text-3xl font-bold mb-2">Aprenda com empreendedores experientes</h2>
   <p class="text-gray-700 mb-4">Mentorias voltadas para quem deseja abrir um negócio, escalar sua startup ou inovar no mercado.</p>
@@ -36,15 +36,8 @@
 
   <footer class="bg-white text-center text-sm text-gray-500 py-8 mt-10">
     <div class="mb-2 text-lg font-bold">Logo</div>
-    <div class="flex justify-center gap-4 text-xl mb-2">
-      <span>🐦</span>
-      <span>📘</span>
-      <span>💼</span>
-    </div>
     <div class="flex justify-center flex-wrap gap-4">
       <a href="#" class="hover:underline">About</a>
-      <a href="#" class="hover:underline">Authors</a>
-      <a href="#" class="hover:underline">Archive</a>
       <a href="#" class="hover:underline">Terms and Conditions</a>
       <a href="#" class="hover:underline">Cookie Policy</a>
     </div>
@@ -72,7 +65,7 @@
           loginButton.textContent = 'Perfil';
           loginButton.href = '../profile'; // Redireciona para a página de perfil
         }
-        
+
         // Atualiza o conteúdo do <nav> com base no tipo de usuário
         if (userType === 'Mentor') {
           nav.innerHTML = `
@@ -85,7 +78,7 @@
             <a href="/about">SOBRE O PROJETO</a>
             <a href="/mentorado/finance">FINANCEIRO</a>
             <a href="/mentorado/carrers">CARREIRA</a>
-            <a href="/mentorado/business"class="font-bold text-black">NEGÓCIOS</a>
+            <a href="/mentorado/business">NEGÓCIOS</a>
             <a href="/mentorado/leadership">LIDERANÇA</a>
             <a href="/mentorado/my_mentorships">MINHAS MENTORIAS</a>
             <a href="/feedbacks">FEEDBACKS</a>
@@ -94,7 +87,7 @@
           // Caso não tenha token ou o token seja inválido
           nav.innerHTML = `
             <a href="/about">SOBRE O PROJETO</a>
-            <a href="/mentorado/business"class="font-bold text-black">NEGÓCIOS</a>
+            <a href="/mentorado/business">NEGÓCIOS</a>
             <a href="/mentorado/carrers">CARREIRA</a>
             <a href="/mentorado/finance">FINANCEIRO</a>
             <a href="/mentorado/leadership">LIDERANÇA</a>
@@ -102,7 +95,6 @@
           `;
         }
     });
-
 
     document.addEventListener('DOMContentLoaded', async () => {
     const mentoriasContainer = document.getElementById('mentoriasContainer');
